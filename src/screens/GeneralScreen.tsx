@@ -1,6 +1,7 @@
+// screens/GeneralScreen.tsx
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  StyleSheet,
   View,
   TextInput,
   TouchableOpacity,
@@ -19,6 +20,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent, { CameraComponentRef } from '../components/CameraComponent';
 
+// 1. IMPORTA LOS ESTILOS DESDE EL ARCHIVO SEPARADO
+import styles from '../screens/GeneralScreen,style';
 
 type JournalEntry = {
   id: string;
@@ -27,7 +30,6 @@ type JournalEntry = {
   image?: string;
 };
 
-// Cambia la clave para que sea exclusiva de esta pantalla
 const STORAGE_KEY = '@journal_entries_general';
 
 const GeneralScreen = ({ navigation }: any) => {
@@ -37,7 +39,6 @@ const GeneralScreen = ({ navigation }: any) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Manejo de cámara
   const [cameraVisible, setCameraVisible] = useState(false);
   const cameraRef = useRef<CameraComponentRef>(null);
 
@@ -49,7 +50,6 @@ const GeneralScreen = ({ navigation }: any) => {
     saveEntries(entries);
   }, [entries]);
 
-  // Guardar entradas en AsyncStorage con clave exclusiva
   const saveEntries = async (entriesToSave: JournalEntry[]) => {
     try {
       const jsonValue = JSON.stringify(entriesToSave);
@@ -59,7 +59,6 @@ const GeneralScreen = ({ navigation }: any) => {
     }
   };
 
-  // Cargar entradas de AsyncStorage con clave exclusiva
   const loadEntries = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
@@ -190,16 +189,12 @@ const GeneralScreen = ({ navigation }: any) => {
         />
 
         <View style={styles.inputContainer}>
-          {/* Botón para abrir cámara */}
           <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
             <Ionicons name="camera" size={24} color="white" />
           </TouchableOpacity>
-
-          {/* Botón para seleccionar imagen de galería */}
           <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
             <Ionicons name="image" size={24} color="white" />
           </TouchableOpacity>
-
           <TextInput
             style={styles.input}
             value={newEntry}
@@ -208,7 +203,6 @@ const GeneralScreen = ({ navigation }: any) => {
             placeholderTextColor="#aaa"
             multiline
           />
-
           <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
             <Ionicons name="send" size={24} color="white" />
           </TouchableOpacity>
@@ -236,7 +230,6 @@ const GeneralScreen = ({ navigation }: any) => {
         />
       )}
 
-      {/* Modal con el componente de cámara externo */}
       <Modal visible={cameraVisible} animationType="slide">
         <CameraComponent ref={cameraRef} onClose={closeCamera} />
         <TouchableOpacity
@@ -257,119 +250,6 @@ const GeneralScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    padding: 10,
-    alignItems: 'center',
-    width: '100%',
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-    zIndex: 10,
-  },
-  entriesList: {
-    paddingBottom: 20,
-  },
-  entryContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 10,
-    padding: 15,
-    marginHorizontal: 15,
-    marginVertical: 8,
-    position: 'relative',
-  },
-  entryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  entryDate: {
-    color: '#555',
-    fontSize: 12,
-  },
-  deleteButton: {
-    padding: 5,
-  },
-  entryText: {
-    fontSize: 16,
-    color: '#333',
-    marginTop: 5,
-  },
-  entryImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  timelineConnector: {
-    position: 'absolute',
-    left: -15,
-    top: 30,
-    bottom: -8,
-    width: 2,
-    backgroundColor: 'white',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  },
-  input: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginHorizontal: 5,
-    maxHeight: 100,
-    color: '#333',
-  },
-  mediaButton: {
-    padding: 8,
-  },
-  sendButton: {
-    padding: 8,
-    marginLeft: 5,
-  },
-  imagePreviewContainer: {
-    position: 'relative',
-    padding: 10,
-  },
-  imagePreview: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-  },
-  removeImageButton: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 10,
-    padding: 2,
-  },
-  listFooter: {
-    height: 20,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 30,
-    marginTop: 30,
-    right: -10,
-  },
-});
+// 2. EL BLOQUE StyleSheet.create HA SIDO ELIMINADO DE AQUÍ
 
 export default GeneralScreen;

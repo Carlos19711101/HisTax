@@ -1,6 +1,7 @@
+// screens/RouteScreen.tsx
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  StyleSheet,
   View,
   TextInput,
   TouchableOpacity,
@@ -20,6 +21,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent, { CameraComponentRef } from '../components/CameraComponent';
 
+// 1. Importamos los estilos desde el nuevo archivo
+import styles from './RouteScreen.styles';
+
 type JournalEntry = {
   id: string;
   text: string;
@@ -27,7 +31,6 @@ type JournalEntry = {
   image?: string;
 };
 
-// Clave única para rutas
 const STORAGE_KEY = '@journal_entries_route';
 
 const RouteScreen = ({ navigation }: any) => {
@@ -36,8 +39,6 @@ const RouteScreen = ({ navigation }: any) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  // Manejo de cámara
   const [cameraVisible, setCameraVisible] = useState(false);
   const cameraRef = useRef<CameraComponentRef>(null);
 
@@ -49,7 +50,6 @@ const RouteScreen = ({ navigation }: any) => {
     saveEntries(entries);
   }, [entries]);
 
-  // Guardar entradas en AsyncStorage con clave exclusiva
   const saveEntries = async (entriesToSave: JournalEntry[]) => {
     try {
       const jsonValue = JSON.stringify(entriesToSave);
@@ -59,7 +59,6 @@ const RouteScreen = ({ navigation }: any) => {
     }
   };
 
-  // Cargar entradas de AsyncStorage con clave exclusiva
   const loadEntries = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
@@ -83,7 +82,7 @@ const RouteScreen = ({ navigation }: any) => {
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
       setSelectedImage(result.assets[0].uri);
     }
   };
@@ -103,14 +102,12 @@ const RouteScreen = ({ navigation }: any) => {
 
   const addEntry = () => {
     if (!newEntry.trim() && !selectedImage) return;
-
     const entry: JournalEntry = {
       id: Date.now().toString(),
       text: newEntry,
       date: new Date(date),
       image: selectedImage || undefined,
     };
-
     setEntries([entry, ...entries]);
     setNewEntry('');
     setSelectedImage(null);
@@ -118,20 +115,10 @@ const RouteScreen = ({ navigation }: any) => {
   };
 
   const deleteEntry = (id: string) => {
-    Alert.alert(
-      'Eliminar entrada',
-      '¿Estás seguro de que quieres borrar este mensaje?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Eliminar',
-          style: 'destructive',
-          onPress: () => {
-            setEntries(entries.filter(entry => entry.id !== id));
-          },
-        },
-      ]
-    );
+    Alert.alert('Eliminar entrada', '¿Estás seguro de que quieres borrar este mensaje?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Eliminar', style: 'destructive', onPress: () => setEntries(entries.filter(entry => entry.id !== id)) },
+    ]);
   };
 
   const renderEntry = ({ item }: { item: JournalEntry }) => (
@@ -144,13 +131,8 @@ const RouteScreen = ({ navigation }: any) => {
           <Ionicons name="trash" size={20} color="#ff5252" />
         </TouchableOpacity>
       </View>
-
-      {item.image && (
-        <Image source={{ uri: item.image }} style={styles.entryImage} />
-      )}
-
+      {item.image && <Image source={{ uri: item.image }} style={styles.entryImage} />}
       {item.text && <Text style={styles.entryText}>{item.text}</Text>}
-
       <View style={styles.timelineConnector} />
     </View>
   );
@@ -163,217 +145,72 @@ const RouteScreen = ({ navigation }: any) => {
   };
 
   return (
-  <SafeAreaView style={{ flex: 1 }}>
-    <LinearGradient
-      colors={['#090FFA', '#242afb', '#58fd03']}
-      style={styles.container}
-    >
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.navigate('Todo')}
-      >
-        <AntDesign name="doubleleft" size={20} color="white" style={{ marginLeft: 0, marginTop: -25 }} />
-      </TouchableOpacity>
-      <View style={styles.content}>
-        <Text style={styles.title}> Mis Rutas </Text>
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoidingView}
-      >
-        <FlatList
-          data={entries}
-          renderItem={renderEntry}
-          keyExtractor={(item) => item.id}
-          inverted
-          contentContainerStyle={styles.entriesList}
-          ListHeaderComponent={<View style={styles.listFooter} />}
-        />
-
-        <View style={styles.inputContainer}>
-          {/* Botón para abrir cámara */}
-          <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
-            <Ionicons name="camera" size={24} color="white" />
-          </TouchableOpacity>
-
-          {/* Botón para seleccionar imagen de galería */}
-          <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
-            <Ionicons name="image" size={24} color="white" />
-          </TouchableOpacity>
-
-          <TextInput
-            style={styles.input}
-            value={newEntry}
-            onChangeText={setNewEntry}
-            placeholder="Escribe tu ruta aquí..."
-            placeholderTextColor="#aaa"
-            multiline
-          />
-
-          <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
-            <Ionicons name="send" size={24} color="white" />
-          </TouchableOpacity>
+    <SafeAreaView style={styles.safeArea}>
+      <LinearGradient colors={['#090FFA', '#242afb', '#58fd03']} style={styles.container}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Todo')}>
+          <AntDesign name="doubleleft" size={20} color="white" style={styles.backButtonIcon} />
+        </TouchableOpacity>
+        <View style={styles.content}>
+          <Text style={styles.title}>Mis Rutas</Text>
         </View>
-
-        {selectedImage && (
-          <View style={styles.imagePreviewContainer}>
-            <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-            <TouchableOpacity
-              style={styles.removeImageButton}
-              onPress={() => setSelectedImage(null)}
-            >
-              <Ionicons name="close" size={20} color="white" />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardAvoidingView}
+        >
+          <FlatList
+            data={entries}
+            renderItem={renderEntry}
+            keyExtractor={(item) => item.id}
+            inverted
+            contentContainerStyle={styles.entriesList}
+            ListHeaderComponent={<View style={styles.listFooter} />}
+          />
+          <View style={styles.inputContainer}>
+            <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
+              <Ionicons name="camera" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
+              <Ionicons name="image" size={24} color="white" />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              value={newEntry}
+              onChangeText={setNewEntry}
+              placeholder="Escribe tu ruta aquí..."
+              placeholderTextColor="#aaa"
+              multiline
+            />
+            <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
+              <Ionicons name="send" size={24} color="white" />
             </TouchableOpacity>
           </View>
+          {selectedImage && (
+            <View style={styles.imagePreviewContainer}>
+              <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
+              <TouchableOpacity style={styles.removeImageButton} onPress={() => setSelectedImage(null)}>
+                <Ionicons name="close" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </KeyboardAvoidingView>
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode="datetime"
+            display="default"
+            onChange={onChangeDate}
+          />
         )}
-      </KeyboardAvoidingView>
-
-      {showDatePicker && (
-        <DateTimePicker
-          value={date}
-          mode="datetime"
-          display="default"
-          onChange={onChangeDate}
-        />
-      )}
-
-      {/* Modal con el componente de cámara externo */}
-      <Modal visible={cameraVisible} animationType="slide">
-        <CameraComponent ref={cameraRef} onClose={closeCamera} />
-        <TouchableOpacity
-          onPress={takePicture}
-          style={{
-            position: 'absolute',
-            bottom: 40,
-            alignSelf: 'center',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            padding: 20,
-            borderRadius: 50,
-          }}
-        >
-          <Ionicons name="camera" size={50} color="white" />
-        </TouchableOpacity>
-      </Modal>
-    </LinearGradient>
-  </SafeAreaView>
+        <Modal visible={cameraVisible} animationType="slide">
+          <CameraComponent ref={cameraRef} onClose={closeCamera} />
+          <TouchableOpacity onPress={takePicture} style={styles.cameraModalButton}>
+            <Ionicons name="camera" size={50} color="white" />
+          </TouchableOpacity>
+        </Modal>
+      </LinearGradient>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    padding: 20,
-    alignItems: 'center',
-    width: '100%',
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-    paddingTop: 5,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 30,
-    zIndex: 10,
-    padding: 10,
-  },
-  entriesList: {
-    paddingBottom: 20,
-  },
-  entryContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 10,
-    padding: 15,
-    marginHorizontal: 15,
-    marginVertical: 8,
-    position: 'relative',
-  },
-  entryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  entryDate: {
-    color: '#555',
-    fontSize: 12,
-  },
-  deleteButton: {
-    padding: 5,
-  },
-  entryText: {
-    fontSize: 16,
-    color: '#333',
-    marginTop: 5,
-  },
-  entryImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  timelineConnector: {
-    position: 'absolute',
-    left: -15,
-    top: 30,
-    bottom: -8,
-    width: 2,
-    backgroundColor: 'white',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  },
-  input: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginHorizontal: 5,
-    maxHeight: 100,
-    color: '#333',
-  },
-  mediaButton: {
-    padding: 8,
-  },
-  sendButton: {
-    padding: 8,
-    marginLeft: 5,
-  },
-  imagePreviewContainer: {
-    position: 'relative',
-    padding: 10,
-  },
-  imagePreview: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-  },
-  removeImageButton: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 10,
-    padding: 2,
-  },
-  listFooter: {
-    height: 20,
-    marginBottom: 5,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 10,
-    marginTop: 10,
-  },
-});
-
+// 2. EL BLOQUE StyleSheet.create HA SIDO ELIMINADO DE AQUÍ
 export default RouteScreen;
