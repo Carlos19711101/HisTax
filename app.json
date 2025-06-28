@@ -1,17 +1,18 @@
 {
   "expo": {
     "name": "Historia motocicleta",
-    "slug": "Historia motocicleta",
+    "slug": "historia-motocicleta",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "",
-    "userInterfaceStyle": "#0f8403",
-    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#0f8403",
     "splash": {
-      "backgroundColor": "#0f8403",
-      "resizeMode": "cover"
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f8403"
     },
-      "plugins": [
+    "plugins": [
       [
         "expo-camera",
         {
@@ -19,10 +20,18 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
       ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0f8403",
+          "splashScreenImage": "./assets/splash.png"
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true,
+      "backgroundColor": "#0f8403",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta aplicación necesita acceso a la cámara para tomar fotos.",
         "NSMicrophoneUsageDescription": "Esta aplicación necesita acceso al micrófono para grabar audio."
@@ -30,14 +39,21 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0f8403"
       },
       "package": "com.anonymous.MySimpleApp",
+      "backgroundColor": "#0f8403",
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO"
-      ]
+      ],
+      "softwareKeyboardLayoutMode": "pan",
+      "edgeToEdgeEnabled": true,
+      "statusBar": {
+        "backgroundColor": "#0f8403",
+        "translucent": false
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
