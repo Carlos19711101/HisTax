@@ -11,8 +11,6 @@ import EmergencyScreen from './src/screens/EmergencyScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import TodoScreen from './src/screens/TodoScreen';
 import RouteScreen from './src/screens/RouteScreen';
-// CORRECCIÓN 1: Se eliminó la importación duplicada de GeneralScreen.
-// Ahora solo hay una, que es la correcta.
 import GeneralScreen from './src/screens/GeneralScreen';
 
 // 1. Define los tipos de rutas

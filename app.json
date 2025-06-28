@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "MySimpleApp",
-    "slug": "MySimpleApp",
+    "name": "Historia motocicleta",
+    "slug": "Historia motocicleta",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "",
+    "userInterfaceStyle": "#0f8403",
     "newArchEnabled": true,
     "splash": {
       "backgroundColor": "#0f8403",
