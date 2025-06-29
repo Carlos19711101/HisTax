@@ -169,7 +169,7 @@ const EmergencyScreen = ({ navigation }: any) => {
         <AntDesign name="doubleleft" size={24} color="white" />
       </TouchableOpacity>
       <View style={styles.content}>
-        <Text style={styles.title}>situaciones en la vía</Text>
+        <Text style={styles.title}>Situaciones en Vía</Text>
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
