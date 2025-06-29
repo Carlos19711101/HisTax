@@ -111,11 +111,11 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
 
   return (
     <LinearGradient colors={['#090FFA','#88D3CE', '#6E45E2']} style={styles.containerGlobal}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('AuthScreen')}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Welcome')}>
         <AntDesign name="doubleleft" size={24} color="white" />
       </TouchableOpacity>
       <View style={styles.content}> 
-        <Text style={styles.title}>Tus Historias</Text>
+        <Text style={styles.title}>Documenta la Historia</Text>
       </View>
       <View style={styles.container}>
         <ScrollView

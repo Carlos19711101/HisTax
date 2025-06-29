@@ -163,7 +163,7 @@ const GeneralScreen = ({ navigation }: any) => {
 
   return (
     <LinearGradient
-      colors={['#090FFA', '#242afb', '#58fd03']}
+      colors={['#090FFA', '#0eb9e3', '#58fd03']}
       style={styles.container}
     >
       <TouchableOpacity

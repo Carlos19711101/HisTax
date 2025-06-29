@@ -146,7 +146,7 @@ const RouteScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <LinearGradient colors={['#090FFA', '#242afb', '#58fd03']} style={styles.container}>
+      <LinearGradient colors={['#090FFA', '#0eb9e3', '#58fd03']} style={styles.container}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Todo')}>
           <AntDesign name="doubleleft" size={20} color="white" style={styles.backButtonIcon} />
         </TouchableOpacity>

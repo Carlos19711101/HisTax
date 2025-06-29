@@ -1,6 +1,7 @@
+
 // screens/ProfileScreen.styles.ts
 
-import { StyleSheet, ViewStyle, TextStyle, ImageStyle, Platform, Dimensions } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle, ImageStyle, Platform, Dimensions, StatusBar } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 const avatarSize = width * 0.7;

@@ -1,4 +1,4 @@
-import { StyleSheet, ViewStyle, TextStyle, ImageStyle } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle, ImageStyle, StatusBar } from 'react-native';
 
 interface Styles {
   container: ViewStyle;
@@ -21,14 +21,18 @@ interface Styles {
   registerLink: ViewStyle;
   registerText: TextStyle;
   registerBold: TextStyle;
+  footerText: TextStyle;
+  footer1Text: TextStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
   container: {
     flex: 1,
     justifyContent: 'center',
+  
   },
   content: {
+    marginTop: -80,
     padding: 20,
     alignItems: 'center',
     width: '100%',
@@ -39,10 +43,11 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 30,
   },
   title: {
+    
     fontSize: 30,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   title2: {
     fontSize: 20,
@@ -131,6 +136,24 @@ const styles = StyleSheet.create<Styles>({
   registerBold: {
     fontWeight: 'bold',
     textDecorationLine: 'underline',
+  },
+    footerText: {
+    position: 'absolute',
+    bottom: 80,
+    color: 'rgba(235, 238, 236, 0.2)',
+    fontSize: 12,
+    textAlign: 'center',
+    width: '100%',
+    opacity: 0.8,
+  },
+  footer1Text: {
+    position: 'absolute',
+    bottom: 50,
+    color: 'rgba(237, 237, 229, 0.2)',
+    fontSize: 18,
+    textAlign: 'center',
+    width: '100%',
+    opacity: 10,
   },
 });
 

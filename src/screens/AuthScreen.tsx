@@ -24,9 +24,9 @@ const AuthScreen = ({ navigation }: any) => {
       colors={['#090FFA', '#6E45E2', '#88D3CE']}
       style={styles.container}
     >
-      <TouchableOpacity style={styles.exitButton} onPress={exitApp}>
+      {/* <TouchableOpacity style={styles.exitButton} onPress={exitApp}>
         <AntDesign name="logout" size={24} color="white" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <View style={styles.content}>
         <Image
           source={{ uri: 'https://via.placeholder.com/100' }}
@@ -83,6 +83,9 @@ const AuthScreen = ({ navigation }: any) => {
           </>
         )}
       </View>
+       {/* Texto "producido por" agregado en la parte inferior */}
+            <Text style={styles.footerText}>producido por:</Text>
+            <Text style={styles.footer1Text}>Global Solutions IA</Text>
     </LinearGradient>
   );
 };

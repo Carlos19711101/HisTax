@@ -167,7 +167,7 @@ const ProfileScreen = ({ navigation }: any) => {
           style={styles.backButton}
           onPress={() => navigation.navigate('Todo')}
         >
-          <AntDesign name="doubleleft" size={34} color="black" />
+          <AntDesign name="doubleleft" size={34} color="#fff" />
         </TouchableOpacity>
 
         <View style={styles.header}>

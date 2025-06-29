@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "Historia motocicleta",
+    "name": "My Moto",
     "slug": "historia-motocicleta",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "backgroundColor": "#0f8403",
+    "backgroundColor": "#ffffff",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0f8403"
+      "backgroundColor": "#ffffff"
     },
     "plugins": [
       [
@@ -24,14 +24,14 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#0f8403",
+          "backgroundColor": "#ffffff",
           "splashScreenImage": "./assets/splash.png"
         }
       ]
     ],
     "ios": {
       "supportsTablet": true,
-      "backgroundColor": "#0f8403",
+      "backgroundColor": "#ffffff",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta aplicación necesita acceso a la cámara para tomar fotos.",
         "NSMicrophoneUsageDescription": "Esta aplicación necesita acceso al micrófono para grabar audio."
@@ -40,10 +40,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0f8403"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.MySimpleApp",
-      "backgroundColor": "#0f8403",
+      "backgroundColor": "#ffffff",
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO"
@@ -51,8 +51,8 @@
       "softwareKeyboardLayoutMode": "pan",
       "edgeToEdgeEnabled": true,
       "statusBar": {
-        "backgroundColor": "#0f8403",
-        "translucent": false
+          "backgroundColor": "transparent",
+          "translucent": true
       }
     },
     "web": {

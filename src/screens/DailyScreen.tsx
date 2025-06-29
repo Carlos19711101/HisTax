@@ -159,7 +159,7 @@ const DailyScreen = ({ navigation }: any) => {
 
   return (
     <LinearGradient
-      colors={['#090FFA', '#242afb', '#58fd03']}
+      colors={['#090FFA', '#0eb9e3', '#58fd03']}
       style={styles.container}
     >
       <TouchableOpacity
@@ -169,7 +169,7 @@ const DailyScreen = ({ navigation }: any) => {
         <AntDesign name="doubleleft" size={24} color="white" />
       </TouchableOpacity>
       <View style={styles.content}>
-        <Text style={styles.title}>Historia Diaria</Text>
+        <Text style={styles.title}>Información Diaria</Text>
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -245,5 +245,6 @@ const DailyScreen = ({ navigation }: any) => {
     </LinearGradient>
   );
 };
+
 
 export default DailyScreen;

@@ -1,6 +1,6 @@
 // screens/TodoScreen.styles.ts
 
-import { StyleSheet, Dimensions, ViewStyle, TextStyle, ImageStyle } from 'react-native';
+import { StyleSheet, Dimensions, ViewStyle, TextStyle, ImageStyle, StatusBar } from 'react-native';
 
 // 1. CONSTANTES DE LAYOUT: Movidas aquí para centralizar la configuración de la presentación.
 const { width } = Dimensions.get('window');
@@ -73,8 +73,8 @@ const styles = StyleSheet.create<Styles>({
   },
   backButton: {
     position: 'absolute',
-    top: 50,
-    left: 30,
+    top: 40,
+    left: 20,
     zIndex: 10,
     padding: 5,
   },
@@ -96,12 +96,12 @@ const styles = StyleSheet.create<Styles>({
     width: 16,
   },
   title: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 30,
-    marginTop: 30,
-    right: -5,
+    marginBottom: 10,
+    marginTop: 25,
+    right: -10,
   },
 });
 

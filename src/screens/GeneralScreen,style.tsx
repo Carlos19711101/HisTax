@@ -49,7 +49,7 @@ const styles = StyleSheet.create<Styles>({
     paddingBottom: 20,
   },
   entryContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(12, 15, 250, 0.9)',
     borderRadius: 10,
     padding: 15,
     marginHorizontal: 15,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 8,
   },
   entryDate: {
-    color: '#555',
+    color: '#fff',
     fontSize: 12,
   },
   deleteButton: {
@@ -71,7 +71,7 @@ const styles = StyleSheet.create<Styles>({
   },
   entryText: {
     fontSize: 16,
-    color: '#333',
+    color: '#fff',
     marginTop: 5,
   },
   entryImage: {

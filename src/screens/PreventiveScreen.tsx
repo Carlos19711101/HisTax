@@ -163,7 +163,7 @@ const PreventiveScreen = ({ navigation }: any) => {
 
   return (
     <LinearGradient
-      colors={['#090FFA', '#242afb', '#58fd03']}
+      colors={['#090FFA', '#0eb9e3', '#58fd03']}
       style={styles.container}
     >
       <TouchableOpacity
@@ -173,7 +173,7 @@ const PreventiveScreen = ({ navigation }: any) => {
         <AntDesign name="doubleleft" size={24} color="white" />
       </TouchableOpacity>
       <View style={styles.content}>
-        <Text style={styles.title}>Preventivo</Text>
+        <Text style={styles.title}>Mantenimiento Preventivo</Text>
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
