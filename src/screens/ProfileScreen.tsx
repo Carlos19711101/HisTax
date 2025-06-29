@@ -14,25 +14,31 @@ import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-
-// 1. IMPORTAMOS LOS ESTILOS CONSOLIDADOS
 import styles from './ProfileScreen.styles';
 
 const ProfileScreen = ({ navigation }: any) => {
-  // Estados (sin cambios)
+  // Estados
   const [avatar, setAvatar] = useState(require('../../assets/imagen/perfil_Moto.png'));
   const [modalVisible, setModalVisible] = useState(false);
+
+  // Estados para modales de edición
   const [editSoatModalVisible, setEditSoatModalVisible] = useState(false);
   const [editPicoyplacaModalVisible, setEditPicoyplacaModalVisible] = useState(false);
   const [editTecnicoModalVisible, setEditTecnicoModalVisible] = useState(false);
+
+  // Datos que se muestran y guardan
   const [tabData, setTabData] = useState({
-    soat: 'Editar vencimiento del Soat',
-    picoyplaca: 'Editar Pico y Placa',
-    tecnico: 'Editar Técnico Mecánica',
+    soat: '',        // Aquí estará el texto editado o vacío para mostrar "Editar"
+    picoyplaca: '',
+    tecnico: '',
   });
+
+  // Valores temporales para editar en modal
   const [editSoatValue, setEditSoatValue] = useState('');
   const [editPicoyplacaValue, setEditPicoyplacaValue] = useState('');
   const [editTecnicoValue, setEditTecnicoValue] = useState('');
+
+  // Datos de la moto
   const [editMotoModalVisible, setEditMotoModalVisible] = useState(false);
   const [userData, setUserData] = useState({
     Marca: '',
@@ -42,7 +48,7 @@ const ProfileScreen = ({ navigation }: any) => {
   });
   const [editMotoValues, setEditMotoValues] = useState(userData);
 
-  // Lógica y funciones (sin cambios)
+  // Cargar datos guardados
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -59,6 +65,9 @@ const ProfileScreen = ({ navigation }: any) => {
           setEditSoatValue(tabs.soat);
           setEditPicoyplacaValue(tabs.picoyplaca);
           setEditTecnicoValue(tabs.tecnico);
+        } else {
+          // Inicializar con cadenas vacías para mostrar "Editar"
+          setTabData({ soat: '', picoyplaca: '', tecnico: '' });
         }
         const avatarUri = await AsyncStorage.getItem('@avatarUri');
         if (avatarUri) {
@@ -71,6 +80,7 @@ const ProfileScreen = ({ navigation }: any) => {
     loadData();
   }, []);
 
+  // Guardar datos
   const saveUserData = async (data: typeof userData) => {
     try {
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
@@ -95,6 +105,7 @@ const ProfileScreen = ({ navigation }: any) => {
     }
   };
 
+  // Funciones para cámara y galería
   const openCamera = async () => {
     setModalVisible(false);
     const result = await ImagePicker.launchCameraAsync({
@@ -121,27 +132,29 @@ const ProfileScreen = ({ navigation }: any) => {
     }
   };
 
+  // Guardar ediciones y cerrar modales
   const handleSaveEditSoat = () => {
-    const newTabData = { ...tabData, soat: editSoatValue };
+    const newTabData = { ...tabData, soat: editSoatValue.trim() || '' };
     setTabData(newTabData);
     saveTabData(newTabData);
     setEditSoatModalVisible(false);
   };
 
   const handleSaveEditPicoyplaca = () => {
-    const newTabData = { ...tabData, picoyplaca: editPicoyplacaValue };
+    const newTabData = { ...tabData, picoyplaca: editPicoyplacaValue.trim() || '' };
     setTabData(newTabData);
     saveTabData(newTabData);
     setEditPicoyplacaModalVisible(false);
   };
 
   const handleSaveEditTecnico = () => {
-    const newTabData = { ...tabData, tecnico: editTecnicoValue };
+    const newTabData = { ...tabData, tecnico: editTecnicoValue.trim() || '' };
     setTabData(newTabData);
     saveTabData(newTabData);
     setEditTecnicoModalVisible(false);
   };
 
+  // Editar información de la moto
   const handleOpenEditMoto = () => {
     setEditMotoValues(userData);
     setEditMotoModalVisible(true);
@@ -200,38 +213,58 @@ const ProfileScreen = ({ navigation }: any) => {
         </View>
 
         <View style={styles.verticalButtonRow}>
+          {/* SOAT */}
           <View style={styles.buttonWithResult}>
             <TouchableOpacity
               style={styles.editButtonCompact}
-              onPress={() => setEditSoatModalVisible(true)}
+              onPress={() => {
+                setEditSoatValue(tabData.soat);
+                setEditSoatModalVisible(true);
+              }}
             >
               <Text style={styles.editButtonText}>Vence Soat</Text>
             </TouchableOpacity>
-            <Text style={styles.resultTextRight}>{tabData.soat}</Text>
+            <Text style={styles.resultTextRight}>
+              {tabData.soat ? tabData.soat : 'Editar'}
+            </Text>
           </View>
 
+          {/* Pico y Placa */}
           <View style={styles.buttonWithResult}>
             <TouchableOpacity
               style={styles.editButtonCompact}
-              onPress={() => setEditPicoyplacaModalVisible(true)}
+              onPress={() => {
+                setEditPicoyplacaValue(tabData.picoyplaca);
+                setEditPicoyplacaModalVisible(true);
+              }}
             >
               <Text style={styles.editButtonText}>Pico y Placa</Text>
             </TouchableOpacity>
-            <Text style={styles.resultTextRight}>{tabData.picoyplaca}</Text>
+            <Text style={styles.resultTextRight}>
+              {tabData.picoyplaca ? tabData.picoyplaca : 'Editar'}
+            </Text>
           </View>
 
+          {/* Técnico Mecánica */}
           <View style={styles.buttonWithResult}>
             <TouchableOpacity
               style={styles.editButtonCompact}
-              onPress={() => setEditTecnicoModalVisible(true)}
+              onPress={() => {
+                setEditTecnicoValue(tabData.tecnico);
+                setEditTecnicoModalVisible(true);
+              }}
             >
               <Text style={styles.editButtonText}>Vence Técnico Mecánica</Text>
             </TouchableOpacity>
-            <Text style={styles.resultTextRight}>{tabData.tecnico}</Text>
+            <Text style={styles.resultTextRight}>
+              {tabData.tecnico ? tabData.tecnico : 'Editar'}
+            </Text>
           </View>
         </View>
 
-        {/* --- MODALES CON ESTILOS ACTUALIZADOS --- */}
+        {/* Modales */}
+
+        {/* Modal para seleccionar imagen */}
         <Modal
           visible={modalVisible}
           transparent
@@ -266,10 +299,34 @@ const ProfileScreen = ({ navigation }: any) => {
           <View style={styles.editModalOverlay}>
             <View style={styles.editModalContent}>
               <Text style={styles.editModalTitle}>Editar Información de la Moto</Text>
-              <TextInput style={styles.editModalInput} value={editMotoValues.Marca} onChangeText={text => setEditMotoValues(prev => ({ ...prev, Marca: text }))} placeholder="Marca" placeholderTextColor="#888" />
-              <TextInput style={styles.editModalInput} value={editMotoValues.Placa} onChangeText={text => setEditMotoValues(prev => ({ ...prev, Placa: text }))} placeholder="Placa" placeholderTextColor="#888" />
-              <TextInput style={styles.editModalInput} value={editMotoValues.Propietario} onChangeText={text => setEditMotoValues(prev => ({ ...prev, Propietario: text }))} placeholder="Propietario" placeholderTextColor="#888" />
-              <TextInput style={styles.editModalInput} value={editMotoValues.Ciudad} onChangeText={text => setEditMotoValues(prev => ({ ...prev, Ciudad: text }))} placeholder="Ciudad" placeholderTextColor="#888" />
+              <TextInput 
+                style={styles.editModalInput} 
+                value={editMotoValues.Marca} 
+                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Marca: text }))} 
+                placeholder="Marca" 
+                placeholderTextColor="#888" 
+              />
+              <TextInput 
+                style={styles.editModalInput} 
+                value={editMotoValues.Placa} 
+                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Placa: text }))} 
+                placeholder="Placa" 
+                placeholderTextColor="#888" 
+              />
+              <TextInput 
+                style={styles.editModalInput} 
+                value={editMotoValues.Propietario} 
+                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Propietario: text }))} 
+                placeholder="Propietario" 
+                placeholderTextColor="#888" 
+              />
+              <TextInput 
+                style={styles.editModalInput} 
+                value={editMotoValues.Ciudad} 
+                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Ciudad: text }))} 
+                placeholder="Ciudad" 
+                placeholderTextColor="#888" 
+              />
               <View style={styles.editModalButtonRow}>
                 <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditMoto}>
                   <Text style={styles.editModalSaveButtonText}>Guardar</Text>
@@ -292,7 +349,14 @@ const ProfileScreen = ({ navigation }: any) => {
           <View style={styles.editModalOverlay}>
             <View style={styles.editModalContent}>
               <Text style={styles.editModalTitle}>Vencimiento Soat</Text>
-              <TextInput style={styles.editModalInput} value={editSoatValue} onChangeText={setEditSoatValue} multiline placeholder="Escribe aquí..." placeholderTextColor="#888" />
+              <TextInput 
+                style={styles.editModalInput} 
+                value={editSoatValue} 
+                onChangeText={setEditSoatValue} 
+                multiline 
+                placeholder="Escribe aquí..." 
+                placeholderTextColor="#888" 
+              />
               <View style={styles.editModalButtonRow}>
                 <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditSoat}>
                   <Text style={styles.editModalSaveButtonText}>Guardar</Text>
@@ -305,13 +369,68 @@ const ProfileScreen = ({ navigation }: any) => {
           </View>
         </Modal>
         
-        {/* Los otros modales (Pico y Placa, Técnico) usan los mismos estilos 'editModal...' */}
-        {/* ... */}
+        {/* Modal para editar Pico y Placa */}
+        <Modal
+          visible={editPicoyplacaModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setEditPicoyplacaModalVisible(false)}
+        >
+          <View style={styles.editModalOverlay}>
+            <View style={styles.editModalContent}>
+              <Text style={styles.editModalTitle}>Pico y Placa</Text>
+              <TextInput 
+                style={styles.editModalInput} 
+                value={editPicoyplacaValue} 
+                onChangeText={setEditPicoyplacaValue} 
+                multiline 
+                placeholder="Escribe aquí..." 
+                placeholderTextColor="#888" 
+              />
+              <View style={styles.editModalButtonRow}>
+                <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditPicoyplaca}>
+                  <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditPicoyplacaModalVisible(false)}>
+                  <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
+        {/* Modal para editar Técnico Mecánica */}
+        <Modal
+          visible={editTecnicoModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setEditTecnicoModalVisible(false)}
+        >
+          <View style={styles.editModalOverlay}>
+            <View style={styles.editModalContent}>
+              <Text style={styles.editModalTitle}>Vencimiento Técnico Mecánica</Text>
+              <TextInput 
+                style={styles.editModalInput} 
+                value={editTecnicoValue} 
+                onChangeText={setEditTecnicoValue} 
+                multiline 
+                placeholder="Escribe aquí..." 
+                placeholderTextColor="#888" 
+              />
+              <View style={styles.editModalButtonRow}>
+                <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditTecnico}>
+                  <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditTecnicoModalVisible(false)}>
+                  <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </LinearGradient>
   );
 };
 
-// 2. TODOS LOS StyleSheet.create HAN SIDO REMOVIDOS DE AQUÍ
 export default ProfileScreen;
