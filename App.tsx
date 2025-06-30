@@ -1,4 +1,5 @@
-// import React from 'react';
+import React from 'react';
+import { StatusBar, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -13,7 +14,7 @@ import TodoScreen from './src/screens/TodoScreen';
 import RouteScreen from './src/screens/RouteScreen';
 import GeneralScreen from './src/screens/GeneralScreen';
 
-// 1. Define los tipos de rutas
+// Tipos de rutas
 type RootStackParamList = {
   Welcome: undefined;
   AuthScreen: undefined;
@@ -26,12 +27,11 @@ type RootStackParamList = {
   Route: undefined;
 };
 
-// 2. Exporta los tipos para usarlos en las pantallas
+// Tipos para navegación
 export type WelcomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
 export type AuthScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'AuthScreen'>;
 export type DailyScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Daily'>;
 export type TodoScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Todo'>;
-// CORRECCIÓN 2: Se corrigió el typo de "Generalcreen" a "GeneralScreen".
 export type GeneralScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'General'>;
 export type PreventiveScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Preventive'>;
 export type EmergencyScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Emergency'>;
@@ -42,66 +42,35 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        // La ruta inicial por defecto es la primera de la lista: "Welcome"
-        initialRouteName="Welcome" 
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#6E45E2',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Welcome"
-          component={WelcomeScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AuthScreen"
-          component={AuthScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Daily"
-          component={DailyScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Todo"
-          component={TodoScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="General"
-          component={GeneralScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Preventive"
-          component={PreventiveScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Emergency"
-          component={EmergencyScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Route"
-          component={RouteScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <>
+      {/* Configuración global del StatusBar */}
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Welcome"
+          screenOptions={{
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="AuthScreen" component={AuthScreen} />
+          <Stack.Screen name="Daily" component={DailyScreen} />
+          <Stack.Screen name="Todo" component={TodoScreen} />
+          <Stack.Screen name="General" component={GeneralScreen} />
+          <Stack.Screen name="Preventive" component={PreventiveScreen} />
+          <Stack.Screen name="Emergency" component={EmergencyScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Route" component={RouteScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
