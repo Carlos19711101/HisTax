@@ -84,7 +84,7 @@ const AuthScreen = ({ navigation }: any) => {
         )}
       </View>
        {/* Texto "producido por" agregado en la parte inferior */}
-            <Text style={styles.footerText}>producido por:</Text>
+            <Text style={styles.footerText}>Respaldado por:</Text>
             <Text style={styles.footer1Text}>Global Solutions IA</Text>
     </LinearGradient>
   );
