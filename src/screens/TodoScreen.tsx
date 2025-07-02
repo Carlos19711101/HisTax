@@ -1,5 +1,3 @@
-// screens/TodoScreen.tsx
-
 import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
@@ -11,12 +9,11 @@ import {
   Platform,
   Image,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
+  StatusBar
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
-
-// 1. IMPORTAMOS los estilos y las constantes de layout desde el archivo de estilos.
 import styles, { CARD_WIDTH, SPACING, MARGIN_HORIZONTAL } from './TodoScreen.styles';
 
 interface CardItem {
@@ -40,7 +37,9 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Lógica de datos y estado (sin cambios)
+  // Calcula la altura segura para el StatusBar
+  const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 10 : 20;
+
   const demoImages = [
     'https://cdn-icons-png.flaticon.com/512/3652/3652191.png',
     'https://cdn-icons-png.flaticon.com/128/4606/4606919.png',
@@ -67,7 +66,6 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
 
   const totalCards = originalCards.length;
 
-  // Lógica de efectos y manejadores (sin cambios)
   useEffect(() => {
     const timer = setTimeout(() => {
       if (scrollViewRef.current) {
@@ -110,71 +108,87 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient colors={['#090FFA','#88D3CE', '#6E45E2']} style={styles.containerGlobal}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Welcome')}>
-        <AntDesign name="doubleleft" size={24} color="white" />
-      </TouchableOpacity>
-      <View style={styles.content}> 
-        <Text style={styles.title}>Documenta la Historia</Text>
-      </View>
-      <View style={styles.container}>
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          decelerationRate={Platform.OS === 'ios' ? 0.99 : 0.95}
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={CARD_WIDTH + SPACING * 2}
-          contentContainerStyle={styles.scrollContainer}
-          onScroll={handleScroll}
-          onMomentumScrollEnd={handleMomentumScrollEnd}
-          scrollEventThrottle={16}
-          directionalLockEnabled={true}
-          alwaysBounceHorizontal={false}
-          bounces={false}
-          overScrollMode="never"
+    <>
+      {/* StatusBar transparente */}
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      
+      <LinearGradient 
+        colors={['#090FFA','#88D3CE', '#6E45E2']} 
+        style={[styles.containerGlobal, { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }]}
+      >
+        <TouchableOpacity 
+          style={[styles.backButton, { top: STATUS_BAR_HEIGHT }]} 
+          onPress={() => navigation.navigate('Welcome')}
         >
-          {cards.map((card, index) => {
-            const inputRange = [
-              (index - 1) * (CARD_WIDTH + SPACING * 2),
-              index * (CARD_WIDTH + SPACING * 2),
-              (index + 1) * (CARD_WIDTH + SPACING * 2),
-            ];
-            const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 0.9, 0.8], extrapolate: 'clamp' });
-            const opacity = scrollX.interpolate({ inputRange, outputRange: [0.5, 1, 0.5], extrapolate: 'clamp' });
-
-            return (
-              <TouchableOpacity key={card.id} activeOpacity={0.8} onPress={() => handleCardPress(card.screenName)}>
-                <Animated.View
-                  style={[
-                    styles.card,
-                    {
-                      width: CARD_WIDTH,
-                      backgroundColor: card.color,
-                      transform: [{ scale }],
-                      opacity,
-                      marginLeft: index === 0 ? MARGIN_HORIZONTAL : SPACING,
-                      marginRight: index === cards.length - 1 ? MARGIN_HORIZONTAL : SPACING,
-                    },
-                  ]}
-                >
-                  {card.image && <Image source={{ uri: card.image }} style={styles.cardImage} resizeMode="contain" />}
-                  <Text style={styles.cardTitle}>{card.title}</Text>
-                  <Text style={styles.cardSubtitle}>{card.subtitle}</Text>
-                </Animated.View>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-        <View style={styles.pagination}>
-          {originalCards.map((_, index) => (
-            <View key={index} style={[ styles.paginationDot, currentIndex === index && styles.paginationDotActive ]} />
-          ))}
+          <AntDesign name="doubleleft" size={24} color="white" />
+        </TouchableOpacity>
+        
+        <View style={styles.content}> 
+          <Text style={styles.title}>Documenta la Historia</Text>
         </View>
-      </View>
-    </LinearGradient>
+        
+        <View style={styles.container}>
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            pagingEnabled
+            decelerationRate={Platform.OS === 'ios' ? 0.99 : 0.95}
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={CARD_WIDTH + SPACING * 2}
+            contentContainerStyle={styles.scrollContainer}
+            onScroll={handleScroll}
+            onMomentumScrollEnd={handleMomentumScrollEnd}
+            scrollEventThrottle={16}
+            directionalLockEnabled={true}
+            alwaysBounceHorizontal={false}
+            bounces={false}
+            overScrollMode="never"
+          >
+            {cards.map((card, index) => {
+              const inputRange = [
+                (index - 1) * (CARD_WIDTH + SPACING * 2),
+                index * (CARD_WIDTH + SPACING * 2),
+                (index + 1) * (CARD_WIDTH + SPACING * 2),
+              ];
+              const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 0.9, 0.8], extrapolate: 'clamp' });
+              const opacity = scrollX.interpolate({ inputRange, outputRange: [0.5, 1, 0.5], extrapolate: 'clamp' });
+
+              return (
+                <TouchableOpacity key={card.id} activeOpacity={0.8} onPress={() => handleCardPress(card.screenName)}>
+                  <Animated.View
+                    style={[
+                      styles.card,
+                      {
+                        width: CARD_WIDTH,
+                        backgroundColor: card.color,
+                        transform: [{ scale }],
+                        opacity,
+                        marginLeft: index === 0 ? MARGIN_HORIZONTAL : SPACING,
+                        marginRight: index === cards.length - 1 ? MARGIN_HORIZONTAL : SPACING,
+                      },
+                    ]}
+                  >
+                    {card.image && <Image source={{ uri: card.image }} style={styles.cardImage} resizeMode="contain" />}
+                    <Text style={styles.cardTitle}>{card.title}</Text>
+                    <Text style={styles.cardSubtitle}>{card.subtitle}</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+          <View style={styles.pagination}>
+            {originalCards.map((_, index) => (
+              <View key={index} style={[ styles.paginationDot, currentIndex === index && styles.paginationDotActive ]} />
+            ))}
+          </View>
+        </View>
+      </LinearGradient>
+    </>
   );
 };
 
-// 2. EL BLOQUE StyleSheet.create HA SIDO ELIMINADO DE AQUÍ
 export default TodoScreen;

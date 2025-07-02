@@ -21,6 +21,8 @@ interface Styles {
   registerLink: ViewStyle;
   registerText: TextStyle;
   registerBold: TextStyle;
+  footerContainer: ViewStyle; // Nuevo estilo para el contenedor del footer
+  footerContent: ViewStyle; // Nuevo estilo para el contenido del footer
   footerText: TextStyle;
   footer1Text: TextStyle;
 }
@@ -29,7 +31,7 @@ const styles = StyleSheet.create<Styles>({
   container: {
     flex: 1,
     justifyContent: 'center',
-  
+    paddingBottom: 80, // Espacio para el footer
   },
   content: {
     marginTop: -80,
@@ -43,7 +45,6 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 30,
   },
   title: {
-    
     fontSize: 30,
     fontWeight: 'bold',
     color: 'white',
@@ -137,23 +138,34 @@ const styles = StyleSheet.create<Styles>({
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
-    footerText: {
+  // Nuevos estilos para el footer transparente
+  footerContainer: {
     position: 'absolute',
-    bottom: 80,
-    color: 'rgba(235, 238, 236, 0.2)',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent', // Fondo transparente
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  footerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  footerText: {
+    color: 'rgba(235, 238, 236, 0.5)', // Ajusté la opacidad para mejor visibilidad
     fontSize: 12,
     textAlign: 'center',
-    width: '100%',
     opacity: 0.8,
   },
   footer1Text: {
-    position: 'absolute',
-    bottom: 50,
-    color: 'rgba(237, 237, 229, 0.2)',
+    color: 'rgba(237, 237, 229, 0.5)', // Ajusté la opacidad para mejor visibilidad
     fontSize: 18,
     textAlign: 'center',
-    width: '100%',
-    opacity: 10,
+    opacity: 0.8,
   },
 });
 

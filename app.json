@@ -1,37 +1,30 @@
 {
   "expo": {
-    "name": "HisMoto",
-    "slug": "historia-motocicleta",
+    "name": "HisCar",
+    "slug": "historia-vehiculo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "transparent",
     "splash": {
       "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "transparent"
     },
     "plugins": [
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "cameraPermission": "Allow HisMoto to access your camera",
+          "microphonePermission": "Allow HisMoto to access your microphone",
           "recordAudioAndroid": true
-        }
-      ],
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#ffffff",
-          "splashScreenImage": "./assets/icon.png"
         }
       ]
     ],
     "ios": {
       "supportsTablet": true,
-      "backgroundColor": "#ffffff",
+      "backgroundColor": "transparent",
       "infoPlist": {
         "NSCameraUsageDescription": "Esta aplicación necesita acceso a la cámara para tomar fotos.",
         "NSMicrophoneUsageDescription": "Esta aplicación necesita acceso al micrófono para grabar audio."
@@ -39,24 +32,23 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "transparent"
       },
-      "package": "com.anonymous.MySimpleApp",
-      "backgroundColor": "#ffffff",
+      "package": "com.carlosvelez.hismoto",
+      "versionCode": 2,
       "permissions": [
-        "CAMERA",
-        "RECORD_AUDIO"
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ],
       "softwareKeyboardLayoutMode": "pan",
-      "edgeToEdgeEnabled": true,
       "statusBar": {
-          "backgroundColor": "transparent",
-          "translucent": true
+        "backgroundColor": "transparent",
+        "translucent": true
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     }
   }
 }

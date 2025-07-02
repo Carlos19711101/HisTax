@@ -1,5 +1,3 @@
-// screens/RouteScreen.tsx
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -12,6 +10,7 @@ import {
   Platform,
   Alert,
   Modal,
+  StatusBar,
   SafeAreaView
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -20,8 +19,6 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent, { CameraComponentRef } from '../components/CameraComponent';
-
-// 1. Importamos los estilos desde el nuevo archivo
 import styles from './RouteScreen.styles';
 
 type JournalEntry = {
@@ -145,72 +142,105 @@ const RouteScreen = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <LinearGradient colors={['#090FFA', '#0eb9e3', '#58fd03']} style={styles.container}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Todo')}>
-          <AntDesign name="doubleleft" size={20} color="white" style={styles.backButtonIcon} />
-        </TouchableOpacity>
-        <View style={styles.content}>
-          <Text style={styles.title}>Mis Rutas</Text>
-        </View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardAvoidingView}
+    <>
+      {/* StatusBar transparente */}
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      
+      <SafeAreaView style={styles.safeArea}>
+        <LinearGradient 
+          colors={['#090FFA', '#0eb9e3', '#58fd03']} 
+          style={[styles.container, { 
+            paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
+          }]}
         >
-          <FlatList
-            data={entries}
-            renderItem={renderEntry}
-            keyExtractor={(item) => item.id}
-            inverted
-            contentContainerStyle={styles.entriesList}
-            ListHeaderComponent={<View style={styles.listFooter} />}
-          />
-          <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
-              <Ionicons name="camera" size={24} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
-              <Ionicons name="image" size={24} color="white" />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.input}
-              value={newEntry}
-              onChangeText={setNewEntry}
-              placeholder="Escribe tu ruta aquí..."
-              placeholderTextColor="#aaa"
-              multiline
-            />
-            <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
-              <Ionicons name="send" size={24} color="white" />
-            </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.backButton, { 
+              top: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 10 : 20 
+            }]} 
+            onPress={() => navigation.navigate('Todo')}
+          >
+            <AntDesign name="doubleleft" size={20} color="white" style={styles.backButtonIcon} />
+          </TouchableOpacity>
+          
+          <View style={styles.content}>
+            <Text style={styles.title}>Mis Rutas</Text>
           </View>
-          {selectedImage && (
-            <View style={styles.imagePreviewContainer}>
-              <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-              <TouchableOpacity style={styles.removeImageButton} onPress={() => setSelectedImage(null)}>
-                <Ionicons name="close" size={20} color="white" />
+          
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.keyboardAvoidingView}
+          >
+            <FlatList
+              data={entries}
+              renderItem={renderEntry}
+              keyExtractor={(item) => item.id}
+              inverted
+              contentContainerStyle={styles.entriesList}
+              ListHeaderComponent={<View style={styles.listFooter} />}
+            />
+            
+            <View style={styles.inputContainer}>
+              <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
+                <Ionicons name="camera" size={24} color="white" />
+              </TouchableOpacity>
+              
+              <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
+                <Ionicons name="image" size={24} color="white" />
+              </TouchableOpacity>
+              
+              <TextInput
+                style={styles.input}
+                value={newEntry}
+                onChangeText={setNewEntry}
+                placeholder="Escribe tu ruta aquí..."
+                placeholderTextColor="#aaa"
+                multiline
+              />
+              
+              <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
+                <Ionicons name="send" size={24} color="white" />
               </TouchableOpacity>
             </View>
+            
+            {selectedImage && (
+              <View style={styles.imagePreviewContainer}>
+                <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
+                <TouchableOpacity 
+                  style={styles.removeImageButton} 
+                  onPress={() => setSelectedImage(null)}
+                >
+                  <Ionicons name="close" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
+            )}
+          </KeyboardAvoidingView>
+          
+          {showDatePicker && (
+            <DateTimePicker
+              value={date}
+              mode="datetime"
+              display="default"
+              onChange={onChangeDate}
+            />
           )}
-        </KeyboardAvoidingView>
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="datetime"
-            display="default"
-            onChange={onChangeDate}
-          />
-        )}
-        <Modal visible={cameraVisible} animationType="slide">
-          <CameraComponent ref={cameraRef} onClose={closeCamera} />
-          <TouchableOpacity onPress={takePicture} style={styles.cameraModalButton}>
-            <Ionicons name="camera" size={50} color="white" />
-          </TouchableOpacity>
-        </Modal>
-      </LinearGradient>
-    </SafeAreaView>
+          
+          <Modal visible={cameraVisible} animationType="slide">
+            <CameraComponent ref={cameraRef} onClose={closeCamera} />
+            <TouchableOpacity 
+              onPress={takePicture} 
+              style={styles.cameraModalButton}
+            >
+              <Ionicons name="camera" size={50} color="white" />
+            </TouchableOpacity>
+          </Modal>
+        </LinearGradient>
+      </SafeAreaView>
+    </>
   );
 };
 
-// 2. EL BLOQUE StyleSheet.create HA SIDO ELIMINADO DE AQUÍ
 export default RouteScreen;

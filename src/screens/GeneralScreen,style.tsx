@@ -140,6 +140,22 @@ const styles = StyleSheet.create<Styles>({
     marginTop: 30,
     right: -10,
   },
+    footerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent', // Fondo transparente
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  footerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingHorizontal: 20,
+  },
 });
 
 export default styles;

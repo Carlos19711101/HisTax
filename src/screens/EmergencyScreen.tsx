@@ -10,6 +10,7 @@ import {
   Platform,
   Alert,
   Modal,
+  StatusBar
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
@@ -34,7 +35,6 @@ const EmergencyScreen = ({ navigation }: any) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-
   const [cameraVisible, setCameraVisible] = useState(false);
   const cameraRef = useRef<CameraComponentRef>(null);
 
@@ -158,94 +158,105 @@ const EmergencyScreen = ({ navigation }: any) => {
   };
 
   return (
-    <LinearGradient
-      colors={['#090FFA', '#0eb9e3', '#58fd03']}
-      style={styles.container}
-    >
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.navigate('Todo')}
+    <>
+      {/* StatusBar transparente */}
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      
+      <LinearGradient
+        colors={['#090FFA', '#0eb9e3', '#58fd03']}
+        style={[styles.container, { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }]}
       >
-        <AntDesign name="doubleleft" size={24} color="white" />
-      </TouchableOpacity>
-      <View style={styles.content}>
-        <Text style={styles.title}>Situaciones en Vía</Text>
-      </View>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoidingView}
-      >
-        <FlatList
-          data={entries}
-          renderItem={renderEntry}
-          keyExtractor={(item) => item.id}
-          inverted
-          contentContainerStyle={styles.entriesList}
-          ListHeaderComponent={<View style={styles.listFooter} />}
-        />
-
-        <View style={styles.inputContainer}>
-          <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
-            <Ionicons name="camera" size={24} color="white" />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
-            <Ionicons name="image" size={24} color="white" />
-          </TouchableOpacity>
-
-          <TextInput
-            style={styles.input}
-            value={newEntry}
-            onChangeText={setNewEntry}
-            placeholder="Escribe tu comentario aquí..."
-            placeholderTextColor="#aaa"
-            multiline
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.navigate('Todo')}
+        >
+          <AntDesign name="doubleleft" size={24} color="white" />
+        </TouchableOpacity>
+        
+        <View style={styles.content}>
+          <Text style={styles.title}>Situaciones en Vía</Text>
+        </View>
+        
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardAvoidingView}
+        >
+          <FlatList
+            data={entries}
+            renderItem={renderEntry}
+            keyExtractor={(item) => item.id}
+            inverted
+            contentContainerStyle={styles.entriesList}
+            ListHeaderComponent={<View style={styles.listFooter} />}
           />
 
-          <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
-            <Ionicons name="send" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
+          <View style={styles.inputContainer}>
+            <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
+              <Ionicons name="camera" size={24} color="white" />
+            </TouchableOpacity>
 
-        {selectedImage && (
-          <View style={styles.imagePreviewContainer}>
-            <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-            <TouchableOpacity
-              style={styles.removeImageButton}
-              onPress={() => setSelectedImage(null)}
-            >
-              <Ionicons name="close" size={20} color="white" />
+            <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
+              <Ionicons name="image" size={24} color="white" />
+            </TouchableOpacity>
+
+            <TextInput
+              style={styles.input}
+              value={newEntry}
+              onChangeText={setNewEntry}
+              placeholder="Escribe tu comentario aquí..."
+              placeholderTextColor="#aaa"
+              multiline
+            />
+
+            <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
+              <Ionicons name="send" size={24} color="white" />
             </TouchableOpacity>
           </View>
+
+          {selectedImage && (
+            <View style={styles.imagePreviewContainer}>
+              <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
+              <TouchableOpacity
+                style={styles.removeImageButton}
+                onPress={() => setSelectedImage(null)}
+              >
+                <Ionicons name="close" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </KeyboardAvoidingView>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode="datetime"
+            display="default"
+            onChange={onChangeDate}
+          />
         )}
-      </KeyboardAvoidingView>
 
-      {showDatePicker && (
-        <DateTimePicker
-          value={date}
-          mode="datetime"
-          display="default"
-          onChange={onChangeDate}
-        />
-      )}
-
-      <Modal visible={cameraVisible} animationType="slide">
-        <CameraComponent ref={cameraRef} onClose={closeCamera} />
-        <TouchableOpacity
-          onPress={takePicture}
-          style={{
-            position: 'absolute',
-            bottom: 40,
-            alignSelf: 'center',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            padding: 20,
-            borderRadius: 50,
-          }}
-        >
-          <Ionicons name="camera" size={50} color="white" />
-        </TouchableOpacity>
-      </Modal>
-    </LinearGradient>
+        <Modal visible={cameraVisible} animationType="slide">
+          <CameraComponent ref={cameraRef} onClose={closeCamera} />
+          <TouchableOpacity
+            onPress={takePicture}
+            style={{
+              position: 'absolute',
+              bottom: 40,
+              alignSelf: 'center',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              padding: 20,
+              borderRadius: 50,
+            }}
+          >
+            <Ionicons name="camera" size={50} color="white" />
+          </TouchableOpacity>
+        </Modal>
+      </LinearGradient>
+    </>
   );
 };
 

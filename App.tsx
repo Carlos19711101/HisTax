@@ -1,5 +1,5 @@
 import React from 'react';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar, Platform, StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -42,7 +42,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <>
+    <View style={styles.appContainer}>
       {/* Configuración global del StatusBar */}
       <StatusBar
         translucent={true}
@@ -71,6 +71,13 @@ export default function App() {
           <Stack.Screen name="Route" component={RouteScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+});

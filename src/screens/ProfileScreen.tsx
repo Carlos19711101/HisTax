@@ -1,5 +1,4 @@
 // screens/ProfileScreen.tsx
-
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -9,6 +8,7 @@ import {
   ScrollView,
   Modal,
   TextInput,
+  StatusBar,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -167,269 +167,276 @@ const ProfileScreen = ({ navigation }: any) => {
   };
 
   return (
-    <LinearGradient
-      colors={['#090FFA', '#6E45E2', '#88D3CE']}
-      style={styles.container}
-    >
-      <ScrollView
+    <>
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      <LinearGradient
+        colors={['#090FFA', '#6E45E2', '#88D3CE']}
         style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
       >
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.navigate('Todo')}
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
         >
-          <AntDesign name="doubleleft" size={34} color="#fff" />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.navigate('Todo')}
+          >
+            <AntDesign name="doubleleft" size={34} color="#fff" />
+          </TouchableOpacity>
 
-        <View style={styles.header}>
-          <View style={styles.avatarContainer}>
-            <Image
-              source={avatar}
-              style={styles.avatar}
-              resizeMode="cover"
-            />
-            <TouchableOpacity
-              style={styles.editAvatarButton}
-              onPress={() => setModalVisible(true)}
-            >
-              <Text style={styles.editAvatarButtonText}>✏️</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.actionsContainer}>
-            <TouchableOpacity style={styles.editButton} onPress={handleOpenEditMoto}>
-              <Text style={styles.editButtonText}>Editar Información</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.centeredInfoContainer}>
-            <Text style={styles.resultText}>{userData.Marca}</Text>
-            <Text style={styles.resultText}>{userData.Placa}</Text>
-            <Text style={styles.resultText}>{userData.Propietario}</Text>
-            <Text style={styles.resultText}>{userData.Ciudad}</Text>
-          </View>
-        </View>
-
-        <View style={styles.verticalButtonRow}>
-          {/* SOAT */}
-          <View style={styles.buttonWithResult}>
-            <TouchableOpacity
-              style={styles.editButtonCompact}
-              onPress={() => {
-                setEditSoatValue(tabData.soat);
-                setEditSoatModalVisible(true);
-              }}
-            >
-              <Text style={styles.editButtonText}>Vence Soat</Text>
-            </TouchableOpacity>
-            <Text style={styles.resultTextRight}>
-              {tabData.soat ? tabData.soat : 'Editar'}
-            </Text>
-          </View>
-
-          {/* Pico y Placa */}
-          <View style={styles.buttonWithResult}>
-            <TouchableOpacity
-              style={styles.editButtonCompact}
-              onPress={() => {
-                setEditPicoyplacaValue(tabData.picoyplaca);
-                setEditPicoyplacaModalVisible(true);
-              }}
-            >
-              <Text style={styles.editButtonText}>Pico y Placa</Text>
-            </TouchableOpacity>
-            <Text style={styles.resultTextRight}>
-              {tabData.picoyplaca ? tabData.picoyplaca : 'Editar'}
-            </Text>
-          </View>
-
-          {/* Técnico Mecánica */}
-          <View style={styles.buttonWithResult}>
-            <TouchableOpacity
-              style={styles.editButtonCompact}
-              onPress={() => {
-                setEditTecnicoValue(tabData.tecnico);
-                setEditTecnicoModalVisible(true);
-              }}
-            >
-              <Text style={styles.editButtonText}>Vence Técnico Mecánica</Text>
-            </TouchableOpacity>
-            <Text style={styles.resultTextRight}>
-              {tabData.tecnico ? tabData.tecnico : 'Editar'}
-            </Text>
-          </View>
-        </View>
-
-        {/* Modales */}
-
-        {/* Modal para seleccionar imagen */}
-        <Modal
-          visible={modalVisible}
-          transparent
-          animationType="slide"
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.imagePickerModalOverlay}>
-            <View style={styles.imagePickerModalContent}>
-              <TouchableOpacity style={styles.imagePickerModalOption} onPress={openCamera}>
-                <Text style={styles.imagePickerModalOptionText}>Abrir cámara</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.imagePickerModalOption} onPress={openGallery}>
-                <Text style={styles.imagePickerModalOptionText}>Abrir galería</Text>
-              </TouchableOpacity>
+          <View style={styles.header}>
+            <View style={styles.avatarContainer}>
+              <Image
+                source={avatar}
+                style={styles.avatar}
+                resizeMode="cover"
+              />
               <TouchableOpacity
-                style={styles.imagePickerModalCancel}
-                onPress={() => setModalVisible(false)}
+                style={styles.editAvatarButton}
+                onPress={() => setModalVisible(true)}
               >
-                <Text style={styles.imagePickerModalCancelText}>Cancelar</Text>
+                <Text style={styles.editAvatarButtonText}>✏️</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
 
-        {/* Modal para editar información de la moto */}
-        <Modal
-          visible={editMotoModalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setEditMotoModalVisible(false)}
-        >
-          <View style={styles.editModalOverlay}>
-            <View style={styles.editModalContent}>
-              <Text style={styles.editModalTitle}>Editar Información de la Moto</Text>
-              <TextInput 
-                style={styles.editModalInput} 
-                value={editMotoValues.Marca} 
-                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Marca: text }))} 
-                placeholder="Marca" 
-                placeholderTextColor="#888" 
-              />
-              <TextInput 
-                style={styles.editModalInput} 
-                value={editMotoValues.Placa} 
-                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Placa: text }))} 
-                placeholder="Placa" 
-                placeholderTextColor="#888" 
-              />
-              <TextInput 
-                style={styles.editModalInput} 
-                value={editMotoValues.Propietario} 
-                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Propietario: text }))} 
-                placeholder="Propietario" 
-                placeholderTextColor="#888" 
-              />
-              <TextInput 
-                style={styles.editModalInput} 
-                value={editMotoValues.Ciudad} 
-                onChangeText={text => setEditMotoValues(prev => ({ ...prev, Ciudad: text }))} 
-                placeholder="Ciudad" 
-                placeholderTextColor="#888" 
-              />
-              <View style={styles.editModalButtonRow}>
-                <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditMoto}>
-                  <Text style={styles.editModalSaveButtonText}>Guardar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditMotoModalVisible(false)}>
-                  <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.actionsContainer}>
+              <TouchableOpacity style={styles.editButton} onPress={handleOpenEditMoto}>
+                <Text style={styles.editButtonText}>Editar Información</Text>
+              </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
 
-        {/* Modal para editar SOAT */}
-        <Modal
-          visible={editSoatModalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setEditSoatModalVisible(false)}
-        >
-          <View style={styles.editModalOverlay}>
-            <View style={styles.editModalContent}>
-              <Text style={styles.editModalTitle}>Vencimiento Soat</Text>
-              <TextInput 
-                style={styles.editModalInput} 
-                value={editSoatValue} 
-                onChangeText={setEditSoatValue} 
-                multiline 
-                placeholder="Escribe aquí..." 
-                placeholderTextColor="#888" 
-              />
-              <View style={styles.editModalButtonRow}>
-                <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditSoat}>
-                  <Text style={styles.editModalSaveButtonText}>Guardar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditSoatModalVisible(false)}>
-                  <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.centeredInfoContainer}>
+              <Text style={styles.resultText}>{userData.Marca}</Text>
+              <Text style={styles.resultText}>{userData.Placa}</Text>
+              <Text style={styles.resultText}>{userData.Propietario}</Text>
+              <Text style={styles.resultText}>{userData.Ciudad}</Text>
             </View>
           </View>
-        </Modal>
-        
-        {/* Modal para editar Pico y Placa */}
-        <Modal
-          visible={editPicoyplacaModalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setEditPicoyplacaModalVisible(false)}
-        >
-          <View style={styles.editModalOverlay}>
-            <View style={styles.editModalContent}>
-              <Text style={styles.editModalTitle}>Pico y Placa</Text>
-              <TextInput 
-                style={styles.editModalInput} 
-                value={editPicoyplacaValue} 
-                onChangeText={setEditPicoyplacaValue} 
-                multiline 
-                placeholder="Escribe aquí..." 
-                placeholderTextColor="#888" 
-              />
-              <View style={styles.editModalButtonRow}>
-                <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditPicoyplaca}>
-                  <Text style={styles.editModalSaveButtonText}>Guardar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditPicoyplacaModalVisible(false)}>
-                  <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
 
-        {/* Modal para editar Técnico Mecánica */}
-        <Modal
-          visible={editTecnicoModalVisible}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setEditTecnicoModalVisible(false)}
-        >
-          <View style={styles.editModalOverlay}>
-            <View style={styles.editModalContent}>
-              <Text style={styles.editModalTitle}>Vencimiento Técnico Mecánica</Text>
-              <TextInput 
-                style={styles.editModalInput} 
-                value={editTecnicoValue} 
-                onChangeText={setEditTecnicoValue} 
-                multiline 
-                placeholder="Escribe aquí..." 
-                placeholderTextColor="#888" 
-              />
-              <View style={styles.editModalButtonRow}>
-                <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditTecnico}>
-                  <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+          <View style={styles.verticalButtonRow}>
+            {/* SOAT */}
+            <View style={styles.buttonWithResult}>
+              <TouchableOpacity
+                style={styles.editButtonCompact}
+                onPress={() => {
+                  setEditSoatValue(tabData.soat);
+                  setEditSoatModalVisible(true);
+                }}
+              >
+                <Text style={styles.editButtonText}>Vence Soat</Text>
+              </TouchableOpacity>
+              <Text style={styles.resultTextRight}>
+                {tabData.soat ? tabData.soat : 'Editar'}
+              </Text>
+            </View>
+
+            {/* Pico y Placa */}
+            <View style={styles.buttonWithResult}>
+              <TouchableOpacity
+                style={styles.editButtonCompact}
+                onPress={() => {
+                  setEditPicoyplacaValue(tabData.picoyplaca);
+                  setEditPicoyplacaModalVisible(true);
+                }}
+              >
+                <Text style={styles.editButtonText}>Pico y Placa</Text>
+              </TouchableOpacity>
+              <Text style={styles.resultTextRight}>
+                {tabData.picoyplaca ? tabData.picoyplaca : 'Editar'}
+              </Text>
+            </View>
+
+            {/* Técnico Mecánica */}
+            <View style={styles.buttonWithResult}>
+              <TouchableOpacity
+                style={styles.editButtonCompact}
+                onPress={() => {
+                  setEditTecnicoValue(tabData.tecnico);
+                  setEditTecnicoModalVisible(true);
+                }}
+              >
+                <Text style={styles.editButtonText}>Vence Técnico Mecánica</Text>
+              </TouchableOpacity>
+              <Text style={styles.resultTextRight}>
+                {tabData.tecnico ? tabData.tecnico : 'Editar'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Modales */}
+
+          {/* Modal para seleccionar imagen */}
+          <Modal
+            visible={modalVisible}
+            transparent
+            animationType="slide"
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={styles.imagePickerModalOverlay}>
+              <View style={styles.imagePickerModalContent}>
+                <TouchableOpacity style={styles.imagePickerModalOption} onPress={openCamera}>
+                  <Text style={styles.imagePickerModalOptionText}>Abrir cámara</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditTecnicoModalVisible(false)}>
-                  <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                <TouchableOpacity style={styles.imagePickerModalOption} onPress={openGallery}>
+                  <Text style={styles.imagePickerModalOptionText}>Abrir galería</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.imagePickerModalCancel}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.imagePickerModalCancelText}>Cancelar</Text>
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
-        </Modal>
-      </ScrollView>
-    </LinearGradient>
+          </Modal>
+
+          {/* Modal para editar información de la moto */}
+          <Modal
+            visible={editMotoModalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setEditMotoModalVisible(false)}
+          >
+            <View style={styles.editModalOverlay}>
+              <View style={styles.editModalContent}>
+                <Text style={styles.editModalTitle}>Editar Información de la Moto</Text>
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editMotoValues.Marca} 
+                  onChangeText={text => setEditMotoValues(prev => ({ ...prev, Marca: text }))} 
+                  placeholder="Marca" 
+                  placeholderTextColor="#888" 
+                />
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editMotoValues.Placa} 
+                  onChangeText={text => setEditMotoValues(prev => ({ ...prev, Placa: text }))} 
+                  placeholder="Placa" 
+                  placeholderTextColor="#888" 
+                />
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editMotoValues.Propietario} 
+                  onChangeText={text => setEditMotoValues(prev => ({ ...prev, Propietario: text }))} 
+                  placeholder="Propietario" 
+                  placeholderTextColor="#888" 
+                />
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editMotoValues.Ciudad} 
+                  onChangeText={text => setEditMotoValues(prev => ({ ...prev, Ciudad: text }))} 
+                  placeholder="Ciudad" 
+                  placeholderTextColor="#888" 
+                />
+                <View style={styles.editModalButtonRow}>
+                  <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditMoto}>
+                    <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditMotoModalVisible(false)}>
+                    <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+          {/* Modal para editar SOAT */}
+          <Modal
+            visible={editSoatModalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setEditSoatModalVisible(false)}
+          >
+            <View style={styles.editModalOverlay}>
+              <View style={styles.editModalContent}>
+                <Text style={styles.editModalTitle}>Vencimiento Soat</Text>
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editSoatValue} 
+                  onChangeText={setEditSoatValue} 
+                  multiline 
+                  placeholder="Escribe aquí..." 
+                  placeholderTextColor="#888" 
+                />
+                <View style={styles.editModalButtonRow}>
+                  <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditSoat}>
+                    <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditSoatModalVisible(false)}>
+                    <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+          
+          {/* Modal para editar Pico y Placa */}
+          <Modal
+            visible={editPicoyplacaModalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setEditPicoyplacaModalVisible(false)}
+          >
+            <View style={styles.editModalOverlay}>
+              <View style={styles.editModalContent}>
+                <Text style={styles.editModalTitle}>Pico y Placa</Text>
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editPicoyplacaValue} 
+                  onChangeText={setEditPicoyplacaValue} 
+                  multiline 
+                  placeholder="Escribe aquí..." 
+                  placeholderTextColor="#888" 
+                />
+                <View style={styles.editModalButtonRow}>
+                  <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditPicoyplaca}>
+                    <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditPicoyplacaModalVisible(false)}>
+                    <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+          {/* Modal para editar Técnico Mecánica */}
+          <Modal
+            visible={editTecnicoModalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setEditTecnicoModalVisible(false)}
+          >
+            <View style={styles.editModalOverlay}>
+              <View style={styles.editModalContent}>
+                <Text style={styles.editModalTitle}>Vencimiento Técnico Mecánica</Text>
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editTecnicoValue} 
+                  onChangeText={setEditTecnicoValue} 
+                  multiline 
+                  placeholder="Escribe aquí..." 
+                  placeholderTextColor="#888" 
+                />
+                <View style={styles.editModalButtonRow}>
+                  <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditTecnico}>
+                    <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditTecnicoModalVisible(false)}>
+                    <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </ScrollView>
+      </LinearGradient>
+    </>
   );
 };
 

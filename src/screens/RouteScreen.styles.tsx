@@ -55,7 +55,7 @@ const styles = StyleSheet.create<Styles>({
   },
   backButtonIcon: {
     marginLeft: 0,
-    marginTop: -25,
+    marginTop: -5,
   },
   entriesList: {
     paddingBottom: 20,
@@ -141,10 +141,6 @@ const styles = StyleSheet.create<Styles>({
     borderRadius: 10,
     padding: 2,
   },
-  listFooter: {
-    height: 20,
-    marginBottom: 5,
-  },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -159,6 +155,26 @@ const styles = StyleSheet.create<Styles>({
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 20,
     borderRadius: 50,
+  },
+   footerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent', // Fondo transparente
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  footerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+    listFooter: {
+    height: 20,
+    marginBottom: 5,
   },
 });
 
