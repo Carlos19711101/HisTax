@@ -1,15 +1,18 @@
+// ProfileScreen.styles.ts
 
-// screens/ProfileScreen.styles.ts
-
-import { StyleSheet, ViewStyle, TextStyle, ImageStyle, Platform, Dimensions, StatusBar } from 'react-native';
+import { StyleSheet, Dimensions, ViewStyle, TextStyle, ImageStyle } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
+
+export const SQUARE_SIZE = 20;
+export const CHECKERBOARD_HEIGHT = height * 0.9; // altura que quieres cubrir
+export const NUM_COLS = Math.ceil(width / SQUARE_SIZE) + 5;  // columnas suficientes para ancho completo
+export const NUM_ROWS = Math.ceil(CHECKERBOARD_HEIGHT / SQUARE_SIZE) + 5; // filas según altura
+
 const avatarSize = width * 0.7;
 const editButtonSize = avatarSize * 0.20;
 
-// Interfaz para todos los estilos del componente, ya consolidados.
 interface Styles {
-  // Estilos Principales
   container: ViewStyle;
   contentContainer: ViewStyle;
   header: ViewStyle;
@@ -27,16 +30,12 @@ interface Styles {
   resultTextRight: TextStyle;
   verticalButtonRow: ViewStyle;
   buttonWithResult: ViewStyle;
-
-  // Estilos para el Modal de Selección de Imagen
   imagePickerModalOverlay: ViewStyle;
   imagePickerModalContent: ViewStyle;
   imagePickerModalOption: ViewStyle;
   imagePickerModalOptionText: TextStyle;
   imagePickerModalCancel: ViewStyle;
   imagePickerModalCancelText: TextStyle;
-
-  // Estilos para los Modales de Edición de Texto
   editModalOverlay: ViewStyle;
   editModalContent: ViewStyle;
   editModalTitle: TextStyle;
@@ -46,10 +45,14 @@ interface Styles {
   editModalSaveButtonText: TextStyle;
   editModalCancelButton: ViewStyle;
   editModalCancelButtonText: TextStyle;
+  footerContainer: ViewStyle;
+  footerContent: ViewStyle;
+
+  checkerboardWrapper: ViewStyle;
+  row: ViewStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
-  // --- Estilos Principales ---
   container: {
     flex: 1,
   },
@@ -69,7 +72,6 @@ const styles = StyleSheet.create<Styles>({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    // Aplicamos el tamaño aquí para que el contenedor tenga la dimensión correcta para la sombra
     width: avatarSize,
     height: avatarSize,
     borderRadius: avatarSize / 2,
@@ -95,23 +97,16 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#ddd',
-    // Aplicamos tamaño y posición aquí
     width: editButtonSize,
     height: editButtonSize,
     borderRadius: editButtonSize / 2,
     right: editButtonSize * 0.2,
     bottom: editButtonSize * 0.2,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   editAvatarButtonText: {
     fontSize: width * 0.04,
@@ -123,20 +118,20 @@ const styles = StyleSheet.create<Styles>({
     paddingHorizontal: width * 0.05,
   },
   editButton: {
-    backgroundColor: '#71e4e9',
+    backgroundColor: 'rgba(70, 6, 6, 0.2)',
     paddingVertical: 10,
     paddingHorizontal: 24,
     borderRadius: 20,
     alignItems: 'center',
     minWidth: 140,
-    shadowColor: '#aaa',
+    shadowColor: 'rgba(0, 0, 0, 0.3)',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 3,
   },
   editButtonCompact: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgba(70, 6, 6, 0.2)',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -151,7 +146,7 @@ const styles = StyleSheet.create<Styles>({
   editButtonText: {
     fontWeight: '600',
     fontSize: width * 0.038,
-    color: '#333',
+    color: '#fff',
   },
   centeredInfoContainer: {
     alignItems: 'center',
@@ -168,7 +163,7 @@ const styles = StyleSheet.create<Styles>({
   resultTextRight: {
     flex: 1,
     fontSize: width * 0.045,
-    color: '#fff',
+    color: 'rgba(20, 13, 17, 0.3)',
     fontWeight: 'bold',
     marginLeft: 15,
     alignSelf: 'center',
@@ -182,8 +177,6 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     marginBottom: 15,
   },
-
-  // --- Estilos para el Modal de Selección de Imagen ---
   imagePickerModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.3)',
@@ -212,8 +205,6 @@ const styles = StyleSheet.create<Styles>({
     fontSize: 16,
     color: '#888',
   },
-
-  // --- Estilos para los Modales de Edición de Texto ---
   editModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.45)',
@@ -275,12 +266,12 @@ const styles = StyleSheet.create<Styles>({
     fontWeight: 'bold',
     fontSize: 16,
   },
-     footerContainer: {
+  footerContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'transparent', // Fondo transparente
+    backgroundColor: 'transparent',
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
@@ -290,6 +281,23 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'space-around',
     width: '100%',
     paddingHorizontal: 20,
+  },
+  // Checkerboard styles
+  checkerboardWrapper: {
+    position: 'absolute',
+    top: 90,
+    left: -75,
+    bottom: 0,
+    width: width + 50,   // ancho pantalla + margen para garantizar cobertura tras rotar
+    height: CHECKERBOARD_HEIGHT,
+    overflow: 'hidden',
+    flexDirection: 'column',
+    transform: [{ rotate: '70deg' }],
+    zIndex: 0,
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
   },
 });
 

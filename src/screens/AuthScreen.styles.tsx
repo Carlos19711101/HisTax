@@ -1,43 +1,29 @@
-import { StyleSheet, ViewStyle, TextStyle, ImageStyle, StatusBar } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-interface Styles {
-  container: ViewStyle;
-  content: ViewStyle;
-  logo: ImageStyle;
-  title: TextStyle;
-  title2: TextStyle;
-  subtitle: TextStyle;
-  welcomeText: TextStyle;
-  button: ViewStyle;
-  mainButton: ViewStyle;
-  googleButton: ViewStyle;
-  emailButton: ViewStyle;
-  buttonText: TextStyle;
-  buttonText2: TextStyle;
-  divider: ViewStyle;
-  dividerLine: ViewStyle;
-  dividerText: TextStyle;
-  exitButton: ViewStyle;
-  registerLink: ViewStyle;
-  registerText: TextStyle;
-  registerBold: TextStyle;
-  footerContainer: ViewStyle; // Nuevo estilo para el contenedor del footer
-  footerContent: ViewStyle; // Nuevo estilo para el contenido del footer
-  footerText: TextStyle;
-  footer1Text: TextStyle;
-}
-
-const styles = StyleSheet.create<Styles>({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingBottom: 80, // Espacio para el footer
+    paddingBottom: 80, // Para margen al footer
+  },
+  sidebarContainer: {
+    position: 'absolute',
+    right: 0,       // Barra lateral a la derecha
+    top: 0,
+    bottom: 0,
+    width: 20 * 4,  // 4 cuadros ancho * tamaño 20px
+    flexDirection: 'column',
+    zIndex: 0,      // Detrás del contenido
+  },
+  row: {
+    flexDirection: 'row',
   },
   content: {
     marginTop: -80,
     padding: 20,
     alignItems: 'center',
     width: '100%',
+    zIndex: 1,
   },
   logo: {
     width: 100,
@@ -47,26 +33,13 @@ const styles = StyleSheet.create<Styles>({
   title: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'rgba(9, 13, 9, 0.7)',
     marginBottom: 20,
-  },
-  title2: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 30,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#4c4e5b',
-    textAlign: 'center',
-    marginBottom: 40,
-    lineHeight: 24,
   },
   welcomeText: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'rgba(18, 24, 18, 0.92)',
     marginBottom: 40,
     textAlign: 'center',
   },
@@ -74,10 +47,10 @@ const styles = StyleSheet.create<Styles>({
     width: '80%',
     paddingVertical: 15,
     borderRadius: 30,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
+    backgroundColor: '#cacbd6',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -88,18 +61,10 @@ const styles = StyleSheet.create<Styles>({
     backgroundColor: 'white',
   },
   googleButton: {
-    backgroundColor: '#cacbd6',
-  },
-  emailButton: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#FF7E5F',
+    backgroundColor: 'rgba(70, 6, 6, 0.2)',
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  buttonText2: {
+    color: 'rgba(248, 243, 243, 0.94)',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -112,7 +77,7 @@ const styles = StyleSheet.create<Styles>({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(18, 25, 18, 0.7)',
     opacity: 0.5,
   },
   dividerText: {
@@ -128,44 +93,24 @@ const styles = StyleSheet.create<Styles>({
     margin: 10,
     padding: 10,
   },
-  registerLink: {
-    marginTop: 20,
-  },
-  registerText: {
-    color: '#4c4e5b',
-  },
-  registerBold: {
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-  },
-  // Nuevos estilos para el footer transparente
-  footerContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'transparent', // Fondo transparente
-    paddingVertical: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  footerContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    paddingHorizontal: 20,
-  },
   footerText: {
-    color: 'rgba(235, 238, 236, 0.5)', // Ajusté la opacidad para mejor visibilidad
+    position: 'absolute',
+    bottom: 100,
+    color: 'rgba(12, 20, 12, 0.7)',
     fontSize: 12,
     textAlign: 'center',
-    opacity: 0.8,
+    width: '100%',
+    zIndex: 1,
   },
   footer1Text: {
-    color: 'rgba(237, 237, 229, 0.5)', // Ajusté la opacidad para mejor visibilidad
+    position: 'absolute',
+    bottom: 70,
+    color: 'rgba(12,20,12,0.7)',
     fontSize: 18,
+    fontWeight: 'bold',
     textAlign: 'center',
-    opacity: 0.8,
+    width: '100%',
+    zIndex: 1,
   },
 });
 

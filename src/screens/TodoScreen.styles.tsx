@@ -1,14 +1,21 @@
-// screens/TodoScreen.styles.ts
+import { StyleSheet, Dimensions, ViewStyle, TextStyle, ImageStyle } from 'react-native';
 
-import { StyleSheet, Dimensions, ViewStyle, TextStyle, ImageStyle, StatusBar } from 'react-native';
+const { width, height } = Dimensions.get('window');
 
-// 1. CONSTANTES DE LAYOUT: Movidas aquí para centralizar la configuración de la presentación.
-const { width } = Dimensions.get('window');
-export const CARD_WIDTH = width * 0.6; // 60% para tarjeta central
+export const CARD_WIDTH = width * 0.6;  // 60% width for center card
 export const SPACING = 0.6;
 export const MARGIN_HORIZONTAL = (width - CARD_WIDTH) / 2 - SPACING;
 
-// Interfaz para todos los estilos del componente
+export const SQUARE_SIZE = 20;
+export const NUM_COLS = 4;
+export const CHECKERBOARD_HEIGHT = height; // Cambiado para cubrir toda la pantalla
+export const NUM_ROWS = Math.ceil(CHECKERBOARD_HEIGHT / SQUARE_SIZE) + 2;
+
+// Gradiente vertical de opacidad para cuadros negros del patrón
+export const opacities = Array.from({ length: NUM_ROWS }, (_, i) =>
+  +(0.10 + (0.6 * i) / (NUM_ROWS - 1)).toFixed(2)
+);
+
 interface Styles {
   containerGlobal: ViewStyle;
   container: ViewStyle;
@@ -23,6 +30,8 @@ interface Styles {
   paginationDot: ViewStyle;
   paginationDotActive: ViewStyle;
   title: TextStyle;
+  sidebarContainer: ViewStyle;
+  row: ViewStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
@@ -73,10 +82,10 @@ const styles = StyleSheet.create<Styles>({
   },
   backButton: {
     position: 'absolute',
-    top: 40,
     left: 20,
     zIndex: 10,
     padding: 5,
+    marginTop: 10,
   },
   pagination: {
     flexDirection: 'row',
@@ -98,26 +107,23 @@ const styles = StyleSheet.create<Styles>({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'rgba(13, 13, 14, 0.14)', // color para contraste
     marginBottom: 10,
-    marginTop: 25,
+    marginTop: 5,
     right: -10,
   },
-   footerContainer: {
+  // Checkerboard sidebar
+  sidebarContainer: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
     right: 0,
-    backgroundColor: 'transparent', // Fondo transparente
-    paddingVertical: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
+    top: 0,
+    bottom: 0,
+    width: SQUARE_SIZE * NUM_COLS,
+    flexDirection: 'column',
+    zIndex: 0,
   },
-  footerContent: {
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    paddingHorizontal: 20,
   },
 });
 

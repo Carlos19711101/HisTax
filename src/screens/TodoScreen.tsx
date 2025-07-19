@@ -8,13 +8,20 @@ import {
   NativeScrollEvent,
   Platform,
   Image,
-  Alert,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
-import styles, { CARD_WIDTH, SPACING, MARGIN_HORIZONTAL } from './TodoScreen.styles';
+import styles, {
+  CARD_WIDTH,
+  SPACING,
+  MARGIN_HORIZONTAL,
+  SQUARE_SIZE,
+  NUM_COLS,
+  NUM_ROWS,
+  opacities,
+} from './TodoScreen.styles';
 
 interface CardItem {
   id: string;
@@ -37,25 +44,27 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Calcula la altura segura para el StatusBar
+
   const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 10 : 20;
 
   const demoImages = [
     'https://cdn-icons-png.flaticon.com/512/3652/3652191.png',
     'https://cdn-icons-png.flaticon.com/128/4606/4606919.png',
     'https://cdn-icons-png.flaticon.com/128/805/805680.png',
-    'https://cdn-icons-png.flaticon.com/128/1048/1048334.png',
+    'https://cdn-icons-png.flaticon.com/128/619/619006.png',
     'https://cdn-icons-png.flaticon.com/128/1133/1133816.png',
-    'https://cdn-icons-png.flaticon.com/128/11133/11133672.png'
+    'https://cdn-icons-png.flaticon.com/128/11133/11133672.png',
+    
   ];
+  
 
   const originalCards: CardItem[] = [
-    { id: '1', title: 'Profile', subtitle: 'Motocicleta \n Datos  ', color: '#33ee0d', screenName: 'Profile', image: demoImages[3] },
-    { id: '2', title: 'Daily', subtitle: 'Actividades \n Diarias', color: '#eb0dee', screenName: 'Daily', image: demoImages[0] },
-    { id: '3', title: 'Preventive', subtitle: 'Mantenimiento preventivo', color: '#0deeda', screenName: 'Preventive', image: demoImages[1] },
-    { id: '4', title: 'Mantenimiento', subtitle: 'General ', color: '#090FFA', screenName: 'General', image: demoImages[5] },
-    { id: '5', title: 'Emergency', subtitle: 'Casos de emergencia', color: '#FF5252', screenName: 'Emergency', image: demoImages[2] },
-    { id: '6', title: 'Route', subtitle: '  Rutas \n  recorridos', color: '#810dee', screenName: 'Route', image: demoImages[4] },
+    { id: '1', title: 'Profile', subtitle: 'Datos \n Vehículo  ', color: '#05defc', screenName: 'Profile', image: demoImages[3] },
+    { id: '2', title: 'Daily', subtitle: 'Actividades \n Diarias', color: '#06fe15', screenName: 'Daily', image: demoImages[0] },
+    { id: '3', title: 'Preventive', subtitle: 'Mantenimiento preventivo', color: '#fef306', screenName: 'Preventive', image: demoImages[1] },
+    { id: '4', title: 'Mantenimiento', subtitle: 'General ', color: '#0319fc', screenName: 'General', image: demoImages[5] },
+    { id: '5', title: 'Emergency', subtitle: 'Casos de emergencia', color: '#fc05ad', screenName: 'Emergency', image: demoImages[2] },
+    { id: '6', title: 'Route', subtitle: '  Rutas \n  recorridos', color: '#fa0b28', screenName: 'Route', image: demoImages[4] },
   ];
 
   const cards = [
@@ -107,24 +116,51 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
     }
   };
 
+  // Checkerboard sidebar usando tus estilos y constantes
+  const renderSidebar = () => (
+    <View style={styles.sidebarContainer} pointerEvents="none">
+      {Array.from({ length: NUM_ROWS }, (_, rowIdx) => (
+        <View key={`row-${rowIdx}`} style={styles.row}>
+          {Array.from({ length: NUM_COLS }).map((_, colIdx) => {
+            const isBlack = (rowIdx + colIdx) % 2 === 0;
+            return (
+              <View
+                key={`cell-${rowIdx}-${colIdx}`}
+                style={{
+                  width: SQUARE_SIZE,
+                  height: SQUARE_SIZE,
+                  backgroundColor: isBlack
+                    ? `rgba(0,0,0,${opacities[rowIdx]})`
+                    : 'transparent',
+                }}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <>
-      {/* StatusBar transparente */}
       <StatusBar
         translucent={true}
         backgroundColor="transparent"
         barStyle="light-content"
       />
-      
-      <LinearGradient 
-        colors={['#090FFA','#88D3CE', '#6E45E2']} 
+      <LinearGradient
+        colors={['#fcf1b3', '#FFC300', '#FFA300']} // degradado de WelcomeScreen
         style={[styles.containerGlobal, { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       >
+        {renderSidebar()}
+
         <TouchableOpacity 
           style={[styles.backButton, { top: STATUS_BAR_HEIGHT }]} 
           onPress={() => navigation.navigate('Welcome')}
         >
-          <AntDesign name="doubleleft" size={24} color="white" />
+          <AntDesign name="doubleleft" size={24} color="black" />
         </TouchableOpacity>
         
         <View style={styles.content}> 

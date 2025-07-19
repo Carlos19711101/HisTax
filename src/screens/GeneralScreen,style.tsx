@@ -1,8 +1,16 @@
-// screens/GeneralScreen.styles.ts
+import { StyleSheet, ViewStyle, TextStyle, ImageStyle, Dimensions } from 'react-native';
 
-import { StyleSheet, ViewStyle, TextStyle, ImageStyle } from 'react-native';
+const { height } = Dimensions.get('window');
 
-// Interfaz para asegurar el tipado fuerte de nuestros estilos
+// Checkerboard config
+export const SQUARE_SIZE = 20;
+export const NUM_COLS = 4;
+export const CHECKERBOARD_HEIGHT = height;
+export const NUM_ROWS = Math.ceil(CHECKERBOARD_HEIGHT / SQUARE_SIZE) + 2;
+export const opacities = Array.from({ length: NUM_ROWS }, (_, i) =>
+  +(0.10 + (0.6 * i) / (NUM_ROWS - 1)).toFixed(2)
+);
+
 interface Styles {
   container: ViewStyle;
   content: ViewStyle;
@@ -25,6 +33,10 @@ interface Styles {
   removeImageButton: ViewStyle;
   listFooter: ViewStyle;
   title: TextStyle;
+  sidebarContainer: ViewStyle;
+  row: ViewStyle;
+  footerContainer: ViewStyle;
+  footerContent: ViewStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
@@ -42,14 +54,15 @@ const styles = StyleSheet.create<Styles>({
   backButton: {
     position: 'absolute',
     top: 40,
-    left: 20,
+    left: 30,
     zIndex: 10,
+    marginTop: 10,
   },
   entriesList: {
     paddingBottom: 20,
   },
   entryContainer: {
-    backgroundColor: 'rgba(12, 15, 250, 0.9)',
+    backgroundColor: 'rgba(43, 202, 213, 0.14)',
     borderRadius: 10,
     padding: 15,
     marginHorizontal: 15,
@@ -63,7 +76,7 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 8,
   },
   entryDate: {
-    color: '#fff',
+    color: 'rgba(0, 0, 0, 0.6)',
     fontSize: 12,
   },
   deleteButton: {
@@ -71,7 +84,7 @@ const styles = StyleSheet.create<Styles>({
   },
   entryText: {
     fontSize: 16,
-    color: '#fff',
+    color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 5,
   },
   entryImage: {
@@ -133,19 +146,31 @@ const styles = StyleSheet.create<Styles>({
     height: 20,
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'rgba(0, 0, 0, 0.6)',
     marginBottom: 30,
-    marginTop: 30,
-    right: -10,
+    marginTop: 20,
+    right: -5,
   },
-    footerContainer: {
+  sidebarContainer: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: SQUARE_SIZE * NUM_COLS,
+    flexDirection: 'column',
+    zIndex: 0,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  footerContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'transparent', // Fondo transparente
+    backgroundColor: 'transparent',
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',

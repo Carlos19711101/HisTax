@@ -19,7 +19,12 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent, { CameraComponentRef } from '../components/CameraComponent';
-import styles from './RouteScreen.styles';
+import styles, {
+  SQUARE_SIZE,
+  NUM_COLS,
+  NUM_ROWS,
+  opacities
+} from './RouteScreen.styles';
 
 type JournalEntry = {
   id: string;
@@ -141,6 +146,31 @@ const RouteScreen = ({ navigation }: any) => {
     }
   };
 
+  // Checkerboard sidebar igual que DailyScreen
+  const renderSidebar = () => (
+    <View style={styles.sidebarContainer} pointerEvents="none">
+      {Array.from({ length: NUM_ROWS }, (_, rowIdx) => (
+        <View key={`row-${rowIdx}`} style={styles.row}>
+          {Array.from({ length: NUM_COLS }).map((_, colIdx) => {
+            const isBlack = (rowIdx + colIdx) % 2 === 0;
+            return (
+              <View
+                key={`cell-${rowIdx}-${colIdx}`}
+                style={{
+                  width: SQUARE_SIZE,
+                  height: SQUARE_SIZE,
+                  backgroundColor: isBlack
+                    ? `rgba(0,0,0,${opacities[rowIdx]})`
+                    : 'transparent',
+                }}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <>
       {/* StatusBar transparente */}
@@ -149,27 +179,30 @@ const RouteScreen = ({ navigation }: any) => {
         backgroundColor="transparent"
         barStyle="light-content"
       />
-      
+
       <SafeAreaView style={styles.safeArea}>
-        <LinearGradient 
-          colors={['#090FFA', '#0eb9e3', '#58fd03']} 
-          style={[styles.container, { 
-            paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
-          }]}
+        <LinearGradient
+          colors={['#fcf1b3', '#FFC300', '#FFA300']}
+          locations={[0, 0.6, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.container, { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }]}
         >
-          <TouchableOpacity 
-            style={[styles.backButton, { 
-              top: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 10 : 20 
-            }]} 
+          {renderSidebar()}
+
+          <TouchableOpacity
+            style={[styles.backButton, {
+              top: Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 10 : 20
+            }]}
             onPress={() => navigation.navigate('Todo')}
           >
-            <AntDesign name="doubleleft" size={20} color="white" style={styles.backButtonIcon} />
+            <AntDesign name="doubleleft" size={20} color="black" style={styles.backButtonIcon} />
           </TouchableOpacity>
-          
+
           <View style={styles.content}>
             <Text style={styles.title}>Mis Rutas</Text>
           </View>
-          
+
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.keyboardAvoidingView}
@@ -182,16 +215,14 @@ const RouteScreen = ({ navigation }: any) => {
               contentContainerStyle={styles.entriesList}
               ListHeaderComponent={<View style={styles.listFooter} />}
             />
-            
+
             <View style={styles.inputContainer}>
               <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
                 <Ionicons name="camera" size={24} color="white" />
               </TouchableOpacity>
-              
               <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
                 <Ionicons name="image" size={24} color="white" />
               </TouchableOpacity>
-              
               <TextInput
                 style={styles.input}
                 value={newEntry}
@@ -200,17 +231,16 @@ const RouteScreen = ({ navigation }: any) => {
                 placeholderTextColor="#aaa"
                 multiline
               />
-              
               <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
                 <Ionicons name="send" size={24} color="white" />
               </TouchableOpacity>
             </View>
-            
+
             {selectedImage && (
               <View style={styles.imagePreviewContainer}>
                 <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-                <TouchableOpacity 
-                  style={styles.removeImageButton} 
+                <TouchableOpacity
+                  style={styles.removeImageButton}
                   onPress={() => setSelectedImage(null)}
                 >
                   <Ionicons name="close" size={20} color="white" />
@@ -218,7 +248,7 @@ const RouteScreen = ({ navigation }: any) => {
               </View>
             )}
           </KeyboardAvoidingView>
-          
+
           {showDatePicker && (
             <DateTimePicker
               value={date}
@@ -227,11 +257,11 @@ const RouteScreen = ({ navigation }: any) => {
               onChange={onChangeDate}
             />
           )}
-          
+
           <Modal visible={cameraVisible} animationType="slide">
             <CameraComponent ref={cameraRef} onClose={closeCamera} />
-            <TouchableOpacity 
-              onPress={takePicture} 
+            <TouchableOpacity
+              onPress={takePicture}
               style={styles.cameraModalButton}
             >
               <Ionicons name="camera" size={50} color="white" />

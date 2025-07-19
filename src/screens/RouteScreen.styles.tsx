@@ -1,15 +1,23 @@
-// screens/RouteScreen.styles.ts
+import { StyleSheet, ViewStyle, TextStyle, ImageStyle, Dimensions } from 'react-native';
 
-import { StyleSheet, ViewStyle, TextStyle, ImageStyle, StatusBar } from 'react-native';
+const { height } = Dimensions.get('window');
 
-// Interfaz para todos los estilos del componente.
+// Checkerboard config
+export const SQUARE_SIZE = 20;
+export const NUM_COLS = 4;
+export const CHECKERBOARD_HEIGHT = height;
+export const NUM_ROWS = Math.ceil(CHECKERBOARD_HEIGHT / SQUARE_SIZE) + 2;
+export const opacities = Array.from({ length: NUM_ROWS }, (_, i) =>
+  +(0.10 + (0.6 * i) / (NUM_ROWS - 1)).toFixed(2)
+);
+
 interface Styles {
   safeArea: ViewStyle;
   container: ViewStyle;
   content: ViewStyle;
   keyboardAvoidingView: ViewStyle;
   backButton: ViewStyle;
-  backButtonIcon: ViewStyle; // Estilo añadido para el icono
+  backButtonIcon: ViewStyle;
   entriesList: ViewStyle;
   entryContainer: ViewStyle;
   entryHeader: ViewStyle;
@@ -27,7 +35,11 @@ interface Styles {
   removeImageButton: ViewStyle;
   listFooter: ViewStyle;
   title: TextStyle;
-  cameraModalButton: ViewStyle; // Estilo añadido para el botón de la cámara
+  cameraModalButton: ViewStyle;
+  sidebarContainer: ViewStyle;
+  row: ViewStyle;
+  footerContainer: ViewStyle;
+  footerContent: ViewStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
@@ -38,20 +50,19 @@ const styles = StyleSheet.create<Styles>({
     flex: 1,
   },
   content: {
-    padding: 20,
+    padding: 10,
     alignItems: 'center',
     width: '100%',
   },
   keyboardAvoidingView: {
     flex: 1,
-    paddingTop: 5,
   },
   backButton: {
     position: 'absolute',
-    top: 50,
+    top: 40,
     left: 30,
     zIndex: 10,
-    padding: 10,
+    marginTop: 10,
   },
   backButtonIcon: {
     marginLeft: 0,
@@ -61,7 +72,7 @@ const styles = StyleSheet.create<Styles>({
     paddingBottom: 20,
   },
   entryContainer: {
-    backgroundColor: 'rgba(12, 15, 250, 0.9)',
+    backgroundColor: 'rgba(43, 202, 213, 0.14)',
     borderRadius: 10,
     padding: 15,
     marginHorizontal: 15,
@@ -75,7 +86,7 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 8,
   },
   entryDate: {
-    color: '#fff',
+    color: 'rgba(0, 0, 0, 0.6)',
     fontSize: 12,
   },
   deleteButton: {
@@ -83,7 +94,7 @@ const styles = StyleSheet.create<Styles>({
   },
   entryText: {
     fontSize: 16,
-    color: '#fff',
+    color: 'rgba(0, 0, 0, 0.6)',
     marginTop: 5,
   },
   entryImage: {
@@ -141,12 +152,16 @@ const styles = StyleSheet.create<Styles>({
     borderRadius: 10,
     padding: 2,
   },
+  listFooter: {
+    height: 20,
+  },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 10,
+    color: 'rgba(0, 0, 0, 0.6)',
+    marginBottom: 30,
     marginTop: 10,
+    right: -5,
   },
   cameraModalButton: {
     position: 'absolute',
@@ -156,12 +171,24 @@ const styles = StyleSheet.create<Styles>({
     padding: 20,
     borderRadius: 50,
   },
-   footerContainer: {
+  sidebarContainer: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: SQUARE_SIZE * NUM_COLS,
+    flexDirection: 'column',
+    zIndex: 0,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  footerContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'transparent', // Fondo transparente
+    backgroundColor: 'transparent',
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
@@ -171,10 +198,6 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'space-around',
     width: '100%',
     paddingHorizontal: 20,
-  },
-    listFooter: {
-    height: 20,
-    marginBottom: 5,
   },
 });
 

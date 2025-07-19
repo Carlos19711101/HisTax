@@ -1,4 +1,3 @@
-// screens/ProfileScreen.tsx
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -9,6 +8,7 @@ import {
   Modal,
   TextInput,
   StatusBar,
+  Dimensions,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -16,39 +16,44 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from './ProfileScreen.styles';
 
+const { height } = Dimensions.get('window');
+const SQUARE_SIZE = 20;
+const NUM_COLS = 4;
+const CHECKERBOARD_HEIGHT = height * 0.5;
+const NUM_ROWS = Math.ceil(CHECKERBOARD_HEIGHT / SQUARE_SIZE) + 2;
+
+// Gradiente de opacidad vertical
+const opacities = Array.from({ length: NUM_ROWS }, (_, i) =>
+  +(0.60 + (0.6 * i) / (NUM_ROWS - 1)).toFixed(2)
+);
+
 const ProfileScreen = ({ navigation }: any) => {
-  // Estados
-  const [avatar, setAvatar] = useState(require('../../assets/imagen/perfil_Moto.png'));
+  const [avatar, setAvatar] = useState(require('../../assets/imagen/taxi1.png'));
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Estados para modales de edición
+  const [editExtracontractualModalVisible, setEditExtracontractualModalVisible] = useState(false);
   const [editSoatModalVisible, setEditSoatModalVisible] = useState(false);
   const [editPicoyplacaModalVisible, setEditPicoyplacaModalVisible] = useState(false);
   const [editTecnicoModalVisible, setEditTecnicoModalVisible] = useState(false);
 
-  // Datos que se muestran y guardan
   const [tabData, setTabData] = useState({
-    soat: '',        // Aquí estará el texto editado o vacío para mostrar "Editar"
+    extracontractual: '',
+    soat: '',
     picoyplaca: '',
     tecnico: '',
   });
-
-  // Valores temporales para editar en modal
+  const [editExtracontractualValue, setEditExtracontractualValue] = useState('');
   const [editSoatValue, setEditSoatValue] = useState('');
   const [editPicoyplacaValue, setEditPicoyplacaValue] = useState('');
   const [editTecnicoValue, setEditTecnicoValue] = useState('');
 
-  // Datos de la moto
   const [editMotoModalVisible, setEditMotoModalVisible] = useState(false);
   const [userData, setUserData] = useState({
     Marca: '',
     Placa: '',
-    Propietario: '',
-    Ciudad: '',
   });
   const [editMotoValues, setEditMotoValues] = useState(userData);
 
-  // Cargar datos guardados
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -61,13 +66,18 @@ const ProfileScreen = ({ navigation }: any) => {
         const tabDataString = await AsyncStorage.getItem('@tabData');
         if (tabDataString) {
           const tabs = JSON.parse(tabDataString);
-          setTabData(tabs);
-          setEditSoatValue(tabs.soat);
-          setEditPicoyplacaValue(tabs.picoyplaca);
-          setEditTecnicoValue(tabs.tecnico);
+          setTabData({
+            extracontractual: tabs.extracontractual || '',
+            soat: tabs.soat || '',
+            picoyplaca: tabs.picoyplaca || '',
+            tecnico: tabs.tecnico || '',
+          });
+          setEditExtracontractualValue(tabs.extracontractual || '');
+          setEditSoatValue(tabs.soat || '');
+          setEditPicoyplacaValue(tabs.picoyplaca || '');
+          setEditTecnicoValue(tabs.tecnico || '');
         } else {
-          // Inicializar con cadenas vacías para mostrar "Editar"
-          setTabData({ soat: '', picoyplaca: '', tecnico: '' });
+          setTabData({ extracontractual: '', soat: '', picoyplaca: '', tecnico: '' });
         }
         const avatarUri = await AsyncStorage.getItem('@avatarUri');
         if (avatarUri) {
@@ -80,7 +90,6 @@ const ProfileScreen = ({ navigation }: any) => {
     loadData();
   }, []);
 
-  // Guardar datos
   const saveUserData = async (data: typeof userData) => {
     try {
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
@@ -105,7 +114,6 @@ const ProfileScreen = ({ navigation }: any) => {
     }
   };
 
-  // Funciones para cámara y galería
   const openCamera = async () => {
     setModalVisible(false);
     const result = await ImagePicker.launchCameraAsync({
@@ -132,7 +140,13 @@ const ProfileScreen = ({ navigation }: any) => {
     }
   };
 
-  // Guardar ediciones y cerrar modales
+  const handleSaveEditExtracontractual = () => {
+    const newTabData = { ...tabData, extracontractual: editExtracontractualValue.trim() || '' };
+    setTabData(newTabData);
+    saveTabData(newTabData);
+    setEditExtracontractualModalVisible(false);
+  };
+
   const handleSaveEditSoat = () => {
     const newTabData = { ...tabData, soat: editSoatValue.trim() || '' };
     setTabData(newTabData);
@@ -154,7 +168,6 @@ const ProfileScreen = ({ navigation }: any) => {
     setEditTecnicoModalVisible(false);
   };
 
-  // Editar información de la moto
   const handleOpenEditMoto = () => {
     setEditMotoValues(userData);
     setEditMotoModalVisible(true);
@@ -166,6 +179,31 @@ const ProfileScreen = ({ navigation }: any) => {
     setEditMotoModalVisible(false);
   };
 
+  // Checkerboard diagonal en la parte inferior izquierda, mitad de pantalla
+  const renderCheckerboard = () => (
+    <View style={styles.checkerboardWrapper} pointerEvents="none">
+      {Array.from({ length: NUM_ROWS }).map((_, rowIdx) => (
+        <View key={`row-${rowIdx}`} style={styles.row}>
+          {Array.from({ length: NUM_COLS }).map((_, colIdx) => {
+            const isBlack = (rowIdx + colIdx) % 2 === 0;
+            return (
+              <View
+                key={`cell-${rowIdx}-${colIdx}`}
+                style={{
+                  width: SQUARE_SIZE,
+                  height: SQUARE_SIZE,
+                  backgroundColor: isBlack
+                    ? `rgba(0,0,0,${opacities[rowIdx]})`
+                    : 'transparent',
+                }}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <>
       <StatusBar
@@ -174,9 +212,13 @@ const ProfileScreen = ({ navigation }: any) => {
         barStyle="light-content"
       />
       <LinearGradient
-        colors={['#090FFA', '#6E45E2', '#88D3CE']}
+        colors={['#fcf1b3', '#FFC300', '#FFA300']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={styles.container}
       >
+        {renderCheckerboard()}
+
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}
@@ -184,9 +226,9 @@ const ProfileScreen = ({ navigation }: any) => {
         >
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.navigate('Todo')}
+            onPress={() => navigation.goBack()}
           >
-            <AntDesign name="doubleleft" size={34} color="#fff" />
+            <AntDesign name="doubleleft" size={34} color="black" />
           </TouchableOpacity>
 
           <View style={styles.header}>
@@ -213,12 +255,25 @@ const ProfileScreen = ({ navigation }: any) => {
             <View style={styles.centeredInfoContainer}>
               <Text style={styles.resultText}>{userData.Marca}</Text>
               <Text style={styles.resultText}>{userData.Placa}</Text>
-              <Text style={styles.resultText}>{userData.Propietario}</Text>
-              <Text style={styles.resultText}>{userData.Ciudad}</Text>
             </View>
           </View>
 
           <View style={styles.verticalButtonRow}>
+            {/* Extracontractual */}
+            <View style={styles.buttonWithResult}>
+              <TouchableOpacity
+                style={styles.editButtonCompact}
+                onPress={() => {
+                  setEditExtracontractualValue(tabData.extracontractual);
+                  setEditExtracontractualModalVisible(true);
+                }}
+              >
+                <Text style={styles.editButtonText}>Extracontractual</Text>
+              </TouchableOpacity>
+              <Text style={styles.resultTextRight}>
+                {tabData.extracontractual ? tabData.extracontractual : 'Editar'}
+              </Text>
+            </View>
             {/* SOAT */}
             <View style={styles.buttonWithResult}>
               <TouchableOpacity
@@ -234,7 +289,6 @@ const ProfileScreen = ({ navigation }: any) => {
                 {tabData.soat ? tabData.soat : 'Editar'}
               </Text>
             </View>
-
             {/* Pico y Placa */}
             <View style={styles.buttonWithResult}>
               <TouchableOpacity
@@ -250,7 +304,6 @@ const ProfileScreen = ({ navigation }: any) => {
                 {tabData.picoyplaca ? tabData.picoyplaca : 'Editar'}
               </Text>
             </View>
-
             {/* Técnico Mecánica */}
             <View style={styles.buttonWithResult}>
               <TouchableOpacity
@@ -268,7 +321,7 @@ const ProfileScreen = ({ navigation }: any) => {
             </View>
           </View>
 
-          {/* Modales */}
+          {/* MODALES */}
 
           {/* Modal para seleccionar imagen */}
           <Modal
@@ -295,7 +348,7 @@ const ProfileScreen = ({ navigation }: any) => {
             </View>
           </Modal>
 
-          {/* Modal para editar información de la moto */}
+          {/* Modal para editar información del Taxi */}
           <Modal
             visible={editMotoModalVisible}
             transparent
@@ -304,7 +357,7 @@ const ProfileScreen = ({ navigation }: any) => {
           >
             <View style={styles.editModalOverlay}>
               <View style={styles.editModalContent}>
-                <Text style={styles.editModalTitle}>Editar Información de la Moto</Text>
+                <Text style={styles.editModalTitle}>Editar Información</Text>
                 <TextInput 
                   style={styles.editModalInput} 
                   value={editMotoValues.Marca} 
@@ -319,25 +372,41 @@ const ProfileScreen = ({ navigation }: any) => {
                   placeholder="Placa" 
                   placeholderTextColor="#888" 
                 />
-                <TextInput 
-                  style={styles.editModalInput} 
-                  value={editMotoValues.Propietario} 
-                  onChangeText={text => setEditMotoValues(prev => ({ ...prev, Propietario: text }))} 
-                  placeholder="Propietario" 
-                  placeholderTextColor="#888" 
-                />
-                <TextInput 
-                  style={styles.editModalInput} 
-                  value={editMotoValues.Ciudad} 
-                  onChangeText={text => setEditMotoValues(prev => ({ ...prev, Ciudad: text }))} 
-                  placeholder="Ciudad" 
-                  placeholderTextColor="#888" 
-                />
                 <View style={styles.editModalButtonRow}>
                   <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditMoto}>
                     <Text style={styles.editModalSaveButtonText}>Guardar</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditMotoModalVisible(false)}>
+                    <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+          {/* Modal para editar Extracontractual */}
+          <Modal
+            visible={editExtracontractualModalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setEditExtracontractualModalVisible(false)}
+          >
+            <View style={styles.editModalOverlay}>
+              <View style={styles.editModalContent}>
+                <Text style={styles.editModalTitle}>Extracontractual</Text>
+                <TextInput 
+                  style={styles.editModalInput} 
+                  value={editExtracontractualValue} 
+                  onChangeText={setEditExtracontractualValue} 
+                  multiline 
+                  placeholder="Escribe aquí..." 
+                  placeholderTextColor="#888" 
+                />
+                <View style={styles.editModalButtonRow}>
+                  <TouchableOpacity style={styles.editModalSaveButton} onPress={handleSaveEditExtracontractual}>
+                    <Text style={styles.editModalSaveButtonText}>Guardar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editModalCancelButton} onPress={() => setEditExtracontractualModalVisible(false)}>
                     <Text style={styles.editModalCancelButtonText}>Cancelar</Text>
                   </TouchableOpacity>
                 </View>

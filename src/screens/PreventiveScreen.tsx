@@ -18,7 +18,12 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CameraComponent, { CameraComponentRef } from '../components/CameraComponent';
-import styles from './PreventiveScreen.styles';
+import styles, {
+  SQUARE_SIZE,
+  NUM_COLS,
+  NUM_ROWS,
+  opacities
+} from './PreventiveScreen.styles';
 
 type JournalEntry = {
   id: string;
@@ -157,6 +162,31 @@ const PreventiveScreen = ({ navigation }: any) => {
     }
   };
 
+  // Checkerboard sidebar usando tus estilos y constantes
+  const renderSidebar = () => (
+    <View style={styles.sidebarContainer} pointerEvents="none">
+      {Array.from({ length: NUM_ROWS }, (_, rowIdx) => (
+        <View key={`row-${rowIdx}`} style={styles.row}>
+          {Array.from({ length: NUM_COLS }).map((_, colIdx) => {
+            const isBlack = (rowIdx + colIdx) % 2 === 0;
+            return (
+              <View
+                key={`cell-${rowIdx}-${colIdx}`}
+                style={{
+                  width: SQUARE_SIZE,
+                  height: SQUARE_SIZE,
+                  backgroundColor: isBlack
+                    ? `rgba(0,0,0,${opacities[rowIdx]})`
+                    : 'transparent',
+                }}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <>
       {/* StatusBar transparente con texto claro */}
@@ -165,24 +195,29 @@ const PreventiveScreen = ({ navigation }: any) => {
         backgroundColor="transparent"
         barStyle="light-content"
       />
-      
+
       <LinearGradient
-        colors={['#090FFA', '#0eb9e3', '#58fd03']}
+        colors={['#fcf1b3', '#FFC300', '#FFA300']}
+        locations={[0, 0.6, 1]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={[styles.container, { 
           paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 
         }]}
       >
+        {renderSidebar()}
+
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.navigate('Todo')}
         >
-          <AntDesign name="doubleleft" size={24} color="white" />
+          <AntDesign name="doubleleft" size={24} color="black" />
         </TouchableOpacity>
-        
+
         <View style={styles.content}>
           <Text style={styles.title}>Mantenimiento Preventivo</Text>
         </View>
-        
+
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.keyboardAvoidingView}
@@ -200,11 +235,9 @@ const PreventiveScreen = ({ navigation }: any) => {
             <TouchableOpacity onPress={openCamera} style={styles.mediaButton}>
               <Ionicons name="camera" size={24} color="white" />
             </TouchableOpacity>
-            
             <TouchableOpacity onPress={pickImage} style={styles.mediaButton}>
               <Ionicons name="image" size={24} color="white" />
             </TouchableOpacity>
-            
             <TextInput
               style={styles.input}
               value={newEntry}
@@ -213,7 +246,6 @@ const PreventiveScreen = ({ navigation }: any) => {
               placeholderTextColor="#aaa"
               multiline
             />
-            
             <TouchableOpacity onPress={addEntry} style={styles.sendButton}>
               <Ionicons name="send" size={24} color="white" />
             </TouchableOpacity>

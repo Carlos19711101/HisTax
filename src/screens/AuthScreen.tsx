@@ -1,8 +1,28 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, BackHandler, Alert, StatusBar, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  BackHandler,
+  Alert,
+  StatusBar,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign } from '@expo/vector-icons';
 import styles from './AuthScreen.styles';
+
+// Parámetros para el checkerboard
+const { height } = Dimensions.get('window');
+const SQUARE_SIZE = 20;
+const NUM_COLS = 4;
+const FOOTER_EXTRA = 120; // Ajusta si el footer es más grande
+const NUM_ROWS = Math.ceil((height + FOOTER_EXTRA) / SQUARE_SIZE);
+const opacities = Array.from({ length: NUM_ROWS }, (_, i) =>
+  +(0.15 + (0.6 * i) / (NUM_ROWS - 1)).toFixed(2)
+);
 
 const AuthScreen = ({ navigation }: any) => {
   const [isLogged, setIsLogged] = React.useState(false);
@@ -19,26 +39,50 @@ const AuthScreen = ({ navigation }: any) => {
     );
   };
 
-  // Calcula la altura del StatusBar según la plataforma
-  const statusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
+  const statusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0;
+
+  // Renderizar el patrón checkerboard como barra lateral derecha
+  const renderSidebar = () => (
+    <View style={styles.sidebarContainer} pointerEvents="none">
+      {Array.from({ length: NUM_ROWS }, (_, rowIdx) => (
+        <View key={`row-${rowIdx}`} style={styles.row}>
+          {[...Array(NUM_COLS)].map((_, colIdx) => {
+            const isBlack = (rowIdx + colIdx) % 2 === 0;
+            return (
+              <View
+                key={`cell-${rowIdx}-${colIdx}`}
+                style={{
+                  width: SQUARE_SIZE,
+                  height: SQUARE_SIZE,
+                  backgroundColor: isBlack
+                    ? `rgba(0,0,0,${opacities[rowIdx]})`
+                    : 'transparent',
+                }}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
 
   return (
     <>
-      {/* Configuración del StatusBar para esta pantalla */}
-      <StatusBar
-        translucent={true}
-        backgroundColor="transparent"
-        barStyle="light-content"
-      />
-      
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+
       <LinearGradient
-        colors={['#090FFA', '#6E45E2', '#88D3CE']}
+        colors={['#fcf1b3', '#FFC300', '#FFA300']}
         style={[styles.container, { paddingTop: statusBarHeight }]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       >
-        {/* <TouchableOpacity style={styles.exitButton} onPress={exitApp}>
-          <AntDesign name="logout" size={24} color="white" />
-        </TouchableOpacity> */}
-        
+        {/* Patrón checkerboard barra lateral derecho atrás del contenido */}
+        {renderSidebar()}
+
+        <TouchableOpacity style={styles.exitButton} onPress={exitApp}>
+          <AntDesign name="logout" size={24} color="black" />
+        </TouchableOpacity>
+
         <View style={styles.content}>
           <Image
             source={{ uri: 'https://via.placeholder.com/100' }}
@@ -58,11 +102,13 @@ const AuthScreen = ({ navigation }: any) => {
           ) : (
             <>
               <Text style={styles.title}>¡Bienvenido!</Text>
+
               <View style={styles.divider}>
                 <View style={styles.dividerLine} />
                 <Text style={styles.dividerText}>o</Text>
                 <View style={styles.dividerLine} />
               </View>
+
               <TouchableOpacity
                 style={[styles.button, styles.googleButton]}
                 onPress={() => navigation.navigate('Todo')}
@@ -70,8 +116,7 @@ const AuthScreen = ({ navigation }: any) => {
               >
                 <Text style={styles.buttonText}>Iniciar Sesión</Text>
               </TouchableOpacity>
-              <Text style={styles.registerText}></Text>
-              <Text style={styles.registerText}></Text>
+
               <TouchableOpacity
                 style={[styles.button, styles.googleButton]}
                 onPress={() => navigation.navigate('Todo')}
@@ -79,24 +124,17 @@ const AuthScreen = ({ navigation }: any) => {
               >
                 <Text style={styles.buttonText}>Sin Registro</Text>
               </TouchableOpacity>
-              <Text style={styles.buttonText}></Text>
+
               <TouchableOpacity
                 style={[styles.button, styles.googleButton]}
                 onPress={() => navigation.navigate('Todo')}
               >
                 <Text style={styles.buttonText}>Sin Datos</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.registerLink}
-                onPress={() => navigation.navigate('Todo')}
-              >
-                {/* Puedes agregar aquí un texto o icono para el registro */}
-              </TouchableOpacity>
             </>
           )}
         </View>
-        
-        {/* Texto "producido por" agregado en la parte inferior */}
+
         <Text style={styles.footerText}>Respaldado por:</Text>
         <Text style={styles.footer1Text}>Global Solutions IA</Text>
       </LinearGradient>
