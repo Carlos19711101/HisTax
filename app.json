@@ -35,7 +35,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#00000000"
       },
-      "package": "com.carlosvelez.hismoto",
+      "package": "com.carlosvelez.HisTax",
       "versionCode": 2,
       "permissions": [
         "android.permission.CAMERA",
@@ -49,6 +49,11 @@
     },
     "web": {
       "favicon": "./assets/icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "25f2ff6b-02fd-4d5c-9402-e819f6591be1"
+      }
     }
   }
 }
