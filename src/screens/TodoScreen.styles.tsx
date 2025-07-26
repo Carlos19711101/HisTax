@@ -107,7 +107,7 @@ const styles = StyleSheet.create<Styles>({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'rgba(13, 13, 14, 0.14)', // color para contraste
+    color: 'rgba(14, 14, 14, 0.99)', // color para contraste
     marginBottom: 10,
     marginTop: 5,
     right: -10,

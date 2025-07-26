@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   footerText: {
     position: 'absolute',
     bottom: 100,
-    color: 'rgba(21, 244, 21, 0.7)',
+    color: 'rgba(14, 14, 14, 0.99)',
     fontSize: 12,
     textAlign: 'center',
     width: '100%',
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   footer1Text: {
     position: 'absolute',
     bottom: 70,
-    color: 'rgba(18, 28, 18, 0.7)',
+    color: 'rgba(14, 14, 14, 0.99)',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',

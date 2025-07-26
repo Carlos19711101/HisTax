@@ -61,7 +61,7 @@ const styles = StyleSheet.create<Styles>({
     paddingBottom: 20,
   },
   entryContainer: {
-    backgroundColor: 'rgba(43, 202, 213, 0.14)',
+    backgroundColor: 'rgba(177, 169, 6, 0.56)',
     borderRadius: 10,
     padding: 15,
     marginHorizontal: 15,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 8,
   },
   entryDate: {
-    color: 'rgba(21, 23, 23, 0.14)',
+    color: 'rgba(14, 14, 14, 0.99)',
     fontSize: 12,
   },
   deleteButton: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create<Styles>({
   },
   entryText: {
     fontSize: 16,
-    color: 'rgba(21, 23, 23, 0.14)',
+    color: 'rgba(14, 14, 14, 0.99)',
     marginTop: 5,
   },
   entryImage: {
@@ -105,7 +105,7 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
     padding: 10,
     marginBottom: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(14, 14, 14, 0.50)',
   },
   input: {
     flex: 1,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create<Styles>({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'rgba(12, 12, 12, 0.14)',
+    color: 'rgba(14, 14, 14, 0.99)',
     marginBottom: 30,
     marginTop: 10,
     right: -5,

@@ -163,7 +163,7 @@ const styles = StyleSheet.create<Styles>({
   resultTextRight: {
     flex: 1,
     fontSize: width * 0.045,
-    color: 'rgba(20, 13, 17, 0.3)',
+    color: 'rgba(14, 14, 14, 0.99)',
     fontWeight: 'bold',
     marginLeft: 15,
     alignSelf: 'center',

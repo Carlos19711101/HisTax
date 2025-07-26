@@ -59,9 +59,9 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
   
 
   const originalCards: CardItem[] = [
-    { id: '1', title: 'Profile', subtitle: 'Datos \n Vehículo  ', color: '#05defc', screenName: 'Profile', image: demoImages[3] },
-    { id: '2', title: 'Daily', subtitle: 'Actividades \n Diarias', color: '#06fe15', screenName: 'Daily', image: demoImages[0] },
-    { id: '3', title: 'Preventive', subtitle: 'Mantenimiento preventivo', color: '#fef306', screenName: 'Preventive', image: demoImages[1] },
+    { id: '1', title: 'Profile', subtitle: 'Datos \n Vehículo  ', color: '#037E91', screenName: 'Profile', image: demoImages[3] },
+    { id: '2', title: 'Daily', subtitle: 'Actividades \n Diarias', color: '#07B513', screenName: 'Daily', image: demoImages[0] },
+    { id: '3', title: 'Preventive', subtitle: 'Mantenimiento preventivo', color: '#B5AD07', screenName: 'Preventive', image: demoImages[1] },
     { id: '4', title: 'Mantenimiento', subtitle: 'General ', color: '#0319fc', screenName: 'General', image: demoImages[5] },
     { id: '5', title: 'Emergency', subtitle: 'Casos de emergencia', color: '#fc05ad', screenName: 'Emergency', image: demoImages[2] },
     { id: '6', title: 'Route', subtitle: '  Rutas \n  recorridos', color: '#fa0b28', screenName: 'Route', image: demoImages[4] },
