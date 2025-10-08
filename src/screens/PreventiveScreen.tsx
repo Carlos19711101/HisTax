@@ -79,7 +79,7 @@ const PreventiveScreen = ({ navigation }: any) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      // aspect: [4, 3],
       quality: 1,
     });
 
@@ -211,7 +211,7 @@ const PreventiveScreen = ({ navigation }: any) => {
           style={styles.backButton}
           onPress={() => navigation.navigate('Todo')}
         >
-          <AntDesign name="doubleleft" size={24} color="black" />
+          <AntDesign name="double-left" size={35} color="black" />
         </TouchableOpacity>
 
         <View style={styles.content}>
@@ -258,7 +258,7 @@ const PreventiveScreen = ({ navigation }: any) => {
                 style={styles.removeImageButton}
                 onPress={() => setSelectedImage(null)}
               >
-                <Ionicons name="close" size={20} color="white" />
+                <Ionicons name="close" size={35} color="white" />
               </TouchableOpacity>
             </View>
           )}

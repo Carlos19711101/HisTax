@@ -79,7 +79,7 @@ const GeneralScreen = ({ navigation }: any) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      // aspect: [4, 3],
       quality: 1,
     });
 
@@ -209,7 +209,7 @@ const GeneralScreen = ({ navigation }: any) => {
           style={styles.backButton}
           onPress={() => navigation.navigate('Todo')}
         >
-          <AntDesign name="doubleleft" size={24} color="black" />
+          <AntDesign name="double-left" size={34} color="black" />
         </TouchableOpacity>
 
         <View style={styles.content}>

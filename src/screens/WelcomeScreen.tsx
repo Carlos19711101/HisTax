@@ -89,7 +89,7 @@ const WelcomeScreen = ({ navigation }: any) => {
           <Text style={styles.subtitle}>Descubre una experiencia única diseñada para ti</Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('AuthScreen')}
+            onPress={() => navigation.navigate('Todo')}
             activeOpacity={0.7}
           >
             <Text style={styles.buttonText}>Comenzar</Text>

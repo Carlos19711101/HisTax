@@ -8,20 +8,15 @@ import {
   NativeScrollEvent,
   Platform,
   Image,
+  Alert,
   TouchableOpacity,
   StatusBar,
+  Easing
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign } from '@expo/vector-icons';
-import styles, {
-  CARD_WIDTH,
-  SPACING,
-  MARGIN_HORIZONTAL,
-  SQUARE_SIZE,
-  NUM_COLS,
-  NUM_ROWS,
-  opacities,
-} from './TodoScreen.styles';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+
+import styles, { CARD_WIDTH, SPACING, MARGIN_HORIZONTAL } from './TodoScreen.styles';
 
 interface CardItem {
   id: string;
@@ -30,7 +25,7 @@ interface CardItem {
   title?: string;
   subtitle?: string;
   screenName?: string;
-  image?: string;
+  image?: any;
 }
 
 interface TodoScreenProps {
@@ -44,27 +39,103 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Animaciones para el efecto de escala alternada perfectamente sincronizada
+  const helpScaleAnim = useRef(new Animated.Value(1)).current;
+  const infoScaleAnim = useRef(new Animated.Value(0.3)).current;
+  const helpOpacityAnim = useRef(new Animated.Value(1)).current;
+  const infoOpacityAnim = useRef(new Animated.Value(0)).current;
 
+  // Calcula la altura segura para el StatusBar
   const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) + 10 : 20;
 
-  const demoImages = [
-    'https://cdn-icons-png.flaticon.com/512/3652/3652191.png',
-    'https://cdn-icons-png.flaticon.com/128/4606/4606919.png',
-    'https://cdn-icons-png.flaticon.com/128/805/805680.png',
-    'https://cdn-icons-png.flaticon.com/128/619/619006.png',
-    'https://cdn-icons-png.flaticon.com/128/1133/1133816.png',
-    'https://cdn-icons-png.flaticon.com/128/11133/11133672.png',
+  // Efecto para la animación de escala alternada perfectamente sincronizada
+  useEffect(() => {
+    // Duración de cada transición
+    const DURATION = 2000;
     
+    // Animación para help2 - comienza visible y en tamaño normal
+    const helpAnimation = Animated.sequence([
+      // Se hace pequeño y desaparece mientras InfoApp crece y aparece
+      Animated.parallel([
+        Animated.timing(helpScaleAnim, {
+          toValue: 0.3,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(helpOpacityAnim, {
+          toValue: 0,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(infoScaleAnim, {
+          toValue: 1,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(infoOpacityAnim, {
+          toValue: 1,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        })
+      ]),
+      // Pausa breve en el estado de cambio
+      Animated.delay(1000),
+      // Vuelve a crecer y aparecer mientras InfoApp se reduce y desaparece
+      Animated.parallel([
+        Animated.timing(helpScaleAnim, {
+          toValue: 1,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(helpOpacityAnim, {
+          toValue: 1,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(infoScaleAnim, {
+          toValue: 0.3,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(infoOpacityAnim, {
+          toValue: 0,
+          duration: DURATION,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: true,
+        })
+      ]),
+      // Pausa antes de repetir el ciclo
+      Animated.delay(1000),
+    ]);
+
+    // Crear loop infinito
+    Animated.loop(helpAnimation).start();
+  }, []);
+
+  // Importar imágenes locales desde assets
+  const localCardImages = [
+    require('../../assets/imagenTargeta/ProfileScreen3.png'),
+    require('../../assets/imagenTargeta/DailyScreen.png'),
+    require('../../assets/imagenTargeta/PreventiveScreen1.png'),
+    require('../../assets/imagenTargeta/GeneralScreen1.png'),
+    require('../../assets/imagenTargeta/EmergencyScreen.png'),
+    require('../../assets/imagenTargeta/RouteScreen.png'),
   ];
-  
 
   const originalCards: CardItem[] = [
-    { id: '1', title: 'Profile', subtitle: 'Datos \n Vehículo  ', color: '#037E91', screenName: 'Profile', image: demoImages[3] },
-    { id: '2', title: 'Daily', subtitle: 'Actividades \n Diarias', color: '#07B513', screenName: 'Daily', image: demoImages[0] },
-    { id: '3', title: 'Preventive', subtitle: 'Mantenimiento preventivo', color: '#B5AD07', screenName: 'Preventive', image: demoImages[1] },
-    { id: '4', title: 'Mantenimiento', subtitle: 'General ', color: '#0319fc', screenName: 'General', image: demoImages[5] },
-    { id: '5', title: 'Emergency', subtitle: 'Casos de emergencia', color: '#fc05ad', screenName: 'Emergency', image: demoImages[2] },
-    { id: '6', title: 'Route', subtitle: '  Rutas \n  recorridos', color: '#fa0b28', screenName: 'Route', image: demoImages[4] },
+    { id: '1', title: 'Profile', subtitle: ' Datos \n     Vehículo   ', color: 'transparent', screenName: 'Profile', image: localCardImages[0] },
+    { id: '2', title: 'Daily', subtitle: '  Agéndate  ', color: 'transparent', screenName: 'Daily', image: localCardImages[1] },
+    { id: '3', title: 'Preventive', subtitle: 'Mantenimiento preventivo', color: 'transparent', screenName: 'Preventive', image: localCardImages[2] },
+    { id: '4', title: 'Maintenancey', subtitle: 'Mantenimiento \n General ', color: 'transparent', screenName: 'General', image: localCardImages[3] },
+    { id: '5', title: 'Emergency', subtitle: 'Percance \nen la Via', color: 'transparent', screenName: 'Emergency', image: localCardImages[4] },
+    { id: '6', title: 'Route', subtitle: '  Rutas \n  recorridos', color: 'transparent', screenName: 'Route', image: localCardImages[5] },
   ];
 
   const cards = [
@@ -116,55 +187,72 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
     }
   };
 
-  // Checkerboard sidebar usando tus estilos y constantes
-  const renderSidebar = () => (
-    <View style={styles.sidebarContainer} pointerEvents="none">
-      {Array.from({ length: NUM_ROWS }, (_, rowIdx) => (
-        <View key={`row-${rowIdx}`} style={styles.row}>
-          {Array.from({ length: NUM_COLS }).map((_, colIdx) => {
-            const isBlack = (rowIdx + colIdx) % 2 === 0;
-            return (
-              <View
-                key={`cell-${rowIdx}-${colIdx}`}
-                style={{
-                  width: SQUARE_SIZE,
-                  height: SQUARE_SIZE,
-                  backgroundColor: isBlack
-                    ? `rgba(0,0,0,${opacities[rowIdx]})`
-                    : 'transparent',
-                }}
-              />
-            );
-          })}
-        </View>
-      ))}
-    </View>
-  );
-
   return (
     <>
+      {/* StatusBar transparente */}
       <StatusBar
         translucent={true}
         backgroundColor="transparent"
         barStyle="light-content"
       />
-      <LinearGradient
-        colors={['#fcf1b3', '#FFC300', '#FFA300']} // degradado de WelcomeScreen
+      
+      <LinearGradient 
+        colors={['#1A2980', '#26D0CE']}
+        start={{ x: 0.1, y: 0.1 }}
+        end={{ x: 0.9, y: 0.9 }}
         style={[styles.containerGlobal, { paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
       >
-        {renderSidebar()}
-
         <TouchableOpacity 
           style={[styles.backButton, { top: STATUS_BAR_HEIGHT }]} 
           onPress={() => navigation.navigate('Welcome')}
         >
-          <AntDesign name="doubleleft" size={24} color="black" />
+          <AntDesign name="double-left" size={30} color="white" />
         </TouchableOpacity>
         
         <View style={styles.content}> 
-          <Text style={styles.title}>Documenta la Historia</Text>
+          <Text style={styles.title}>¿Qué deseas hacer?</Text>
+        </View>
+        
+        {/* Botón con animación de escala para el chatbot (help2) */}
+        <View style={styles.content}>
+          <TouchableOpacity 
+            style={styles.addButton}
+            onPress={() => navigation.navigate('ChatBots')}  // Navega a la pantalla del chatbot
+          >
+            <Animated.Image
+              source={require('../../assets/imagen/help2.png')}
+              style={[
+                styles.addButton2,
+                {
+                  transform: [
+                    { scale: helpScaleAnim }
+                  ],
+                  opacity: helpOpacityAnim
+                }
+              ]}
+            />
+          </TouchableOpacity>
+        </View>
+        
+        {/* Botón de información de la aplicación (InfoApp) con animación opuesta */}
+        <View style={styles.content1}>
+          <TouchableOpacity 
+            style={styles.addButton3}
+            onPress={() => navigation.navigate('Info')}  // Navega a la pantalla de información
+          >
+            <Animated.Image
+              source={require('../../assets/imagen/InfoApp.png')}
+              style={[
+                styles.addButton4,
+                {
+                  transform: [
+                    { scale: infoScaleAnim }
+                  ],
+                  opacity: infoOpacityAnim
+                }
+              ]}
+            />
+          </TouchableOpacity>
         </View>
         
         <View style={styles.container}>
@@ -190,7 +278,7 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
                 index * (CARD_WIDTH + SPACING * 2),
                 (index + 1) * (CARD_WIDTH + SPACING * 2),
               ];
-              const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 0.9, 0.8], extrapolate: 'clamp' });
+              const scale = scrollX.interpolate({ inputRange, outputRange: [0.8, 0.99, 0.8], extrapolate: 'clamp' });
               const opacity = scrollX.interpolate({ inputRange, outputRange: [0.5, 1, 0.5], extrapolate: 'clamp' });
 
               return (
@@ -205,12 +293,21 @@ const TodoScreen: React.FC<TodoScreenProps> = ({ navigation }) => {
                         opacity,
                         marginLeft: index === 0 ? MARGIN_HORIZONTAL : SPACING,
                         marginRight: index === cards.length - 1 ? MARGIN_HORIZONTAL : SPACING,
+                        overflow: 'hidden',
                       },
                     ]}
                   >
-                    {card.image && <Image source={{ uri: card.image }} style={styles.cardImage} resizeMode="contain" />}
-                    <Text style={styles.cardTitle}>{card.title}</Text>
-                    <Text style={styles.cardSubtitle}>{card.subtitle}</Text>
+                    {card.image && (
+                      <Image 
+                        source={card.image} 
+                        style={styles.cardImage} 
+                        resizeMode="cover"
+                      />
+                    )}
+                    <View style={styles.textContainer}>
+                      <Text style={styles.cardTitle}>{card.title}</Text>
+                      <Text style={styles.cardSubtitle}>{card.subtitle}</Text>
+                    </View>
                   </Animated.View>
                 </TouchableOpacity>
               );

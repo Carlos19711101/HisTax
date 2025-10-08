@@ -40,6 +40,9 @@ interface Styles {
   row: ViewStyle;
   footerContainer: ViewStyle;
   footerContent: ViewStyle;
+  searchAddressButton: ViewStyle;
+  searchAddressText: TextStyle;
+  searchIcon: ViewStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
@@ -53,16 +56,18 @@ const styles = StyleSheet.create<Styles>({
     padding: 10,
     alignItems: 'center',
     width: '100%',
+    marginTop: 20, // ✅ Añadido para mejor espaciado
   },
   keyboardAvoidingView: {
     flex: 1,
+    paddingTop: 5, // ✅ Añadido para mejor espaciado
   },
   backButton: {
     position: 'absolute',
     top: 40,
-    left: 30,
+    left: 20, // ✅ Corregido: más a la izquierda
     zIndex: 10,
-    marginTop: 10,
+    padding: 10, // ✅ Añadido para mejor tappability
   },
   backButtonIcon: {
     marginLeft: 0,
@@ -70,12 +75,13 @@ const styles = StyleSheet.create<Styles>({
   },
   entriesList: {
     paddingBottom: 20,
+    paddingTop: 10, // ✅ Añadido para mejor espaciado
   },
   entryContainer: {
-    backgroundColor: 'rgba(177, 169, 6, 0.56)',
+    backgroundColor: 'rgba(177, 169, 6, 0.8)', // ✅ Aumentada opacidad para mejor legibilidad
     borderRadius: 10,
-    padding: 15,
-    marginHorizontal: 15,
+    padding: 15, // ✅ Aumentado padding para mejor apariencia
+    marginHorizontal: 8,
     marginVertical: 8,
     position: 'relative',
   },
@@ -86,22 +92,24 @@ const styles = StyleSheet.create<Styles>({
     marginBottom: 8,
   },
   entryDate: {
-    color: 'rgba(14, 14, 14, 0.99)',
+    color: 'rgba(255, 255, 255, 0.99)', // ✅ Mejor contraste
     fontSize: 12,
+    fontWeight: '500', // ✅ Añadido peso para mejor legibilidad
   },
   deleteButton: {
     padding: 5,
   },
   entryText: {
     fontSize: 16,
-    color: 'rgba(14, 14, 14, 0.99)',
+    color: 'rgba(255, 255, 255, 0.99)', // ✅ Mejor contraste
     marginTop: 5,
+    lineHeight: 20, // ✅ Añadido para mejor legibilidad
   },
   entryImage: {
     width: '100%',
-    height: 200,
+    height: 200, // ✅ Reducido para mejor proporción
     borderRadius: 8,
-    marginTop: 10,
+    marginTop: 8,
   },
   timelineConnector: {
     position: 'absolute',
@@ -109,24 +117,27 @@ const styles = StyleSheet.create<Styles>({
     top: 30,
     bottom: -8,
     width: 2,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)', // ✅ Mejor visibilidad
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    marginBottom: 10,
-    backgroundColor: 'rgba(14, 14, 14, 0.50)',
+    marginBottom: 20, // ✅ Corregido: mejor margen inferior
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // ✅ Mejor contraste con fondo amarillo
+    marginHorizontal: 8, // ✅ Añadido para mejor alineación
+    borderRadius: 25, // ✅ Añadido bordes redondeados
   },
   input: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)', // ✅ Mejor contraste
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginHorizontal: 5,
     maxHeight: 100,
     color: '#333',
+    fontSize: 13, // ✅ Añadido tamaño de fuente consistente
   },
   mediaButton: {
     padding: 8,
@@ -134,34 +145,37 @@ const styles = StyleSheet.create<Styles>({
   sendButton: {
     padding: 8,
     marginLeft: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // ✅ Añadido fondo para mejor visibilidad
+    borderRadius: 20,
   },
   imagePreviewContainer: {
     position: 'relative',
     padding: 10,
+    alignItems: 'center', // ✅ Centrado
   },
   imagePreview: {
-    width: 100,
-    height: 100,
+    width: 120, // ✅ Tamaño ligeramente mayor
+    height: 120,
     borderRadius: 8,
   },
   removeImageButton: {
     position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 10,
-    padding: 2,
+    top: 15,
+    right: 15,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // ✅ Mejor contraste
+    borderRadius: 15,
+    padding: 5,
   },
   listFooter: {
     height: 20,
   },
   title: {
-    fontSize: 18,
+    fontSize: 24, // ✅ Tamaño aumentado para mejor jerarquía
     fontWeight: 'bold',
-    color: 'rgba(14, 14, 14, 0.99)',
-    marginBottom: 30,
+    color: 'rgba(0, 0, 0, 0.9)', // ✅ Color más oscuro para mejor contraste
+    marginBottom: 15,
     marginTop: 10,
-    right: -5,
+    textAlign: 'center', // ✅ Centrado
   },
   cameraModalButton: {
     position: 'absolute',
@@ -198,6 +212,33 @@ const styles = StyleSheet.create<Styles>({
     justifyContent: 'space-around',
     width: '100%',
     paddingHorizontal: 20,
+  },
+  // ✅ Añadidos estilos para el botón de búsqueda (copiados del primer screen)
+  searchAddressButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.34)', // ✅ Color que contrasta con fondo amarillo
+    paddingVertical: 12,
+    paddingHorizontal: 60,
+    borderRadius: 25,
+    marginTop: 10,
+    shadowColor: '#000', // ✅ Añadida sombra para mejor apariencia
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  searchAddressText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 10, // ✅ Mejor espaciado con icono
+  },
+  searchIcon: {
+    marginRight: 5, // ✅ Mejor posicionamiento
   },
 });
 

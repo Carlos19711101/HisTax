@@ -1,21 +1,12 @@
-import { StyleSheet, Dimensions, ViewStyle, TextStyle, ImageStyle } from 'react-native';
+import { StyleSheet, Dimensions, ViewStyle, TextStyle, ImageStyle, StatusBar } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
-
-export const CARD_WIDTH = width * 0.6;  // 60% width for center card
+// 1. CONSTANTES DE LAYOUT: Movidas aquí para centralizar la configuración de la presentación.
+const { width } = Dimensions.get('window');
+export const CARD_WIDTH = width * 0.6; // 60% para tarjeta central
 export const SPACING = 0.6;
 export const MARGIN_HORIZONTAL = (width - CARD_WIDTH) / 2 - SPACING;
 
-export const SQUARE_SIZE = 20;
-export const NUM_COLS = 4;
-export const CHECKERBOARD_HEIGHT = height; // Cambiado para cubrir toda la pantalla
-export const NUM_ROWS = Math.ceil(CHECKERBOARD_HEIGHT / SQUARE_SIZE) + 2;
-
-// Gradiente vertical de opacidad para cuadros negros del patrón
-export const opacities = Array.from({ length: NUM_ROWS }, (_, i) =>
-  +(0.10 + (0.6 * i) / (NUM_ROWS - 1)).toFixed(2)
-);
-
+// Interfaz para todos los estilos del componente
 interface Styles {
   containerGlobal: ViewStyle;
   container: ViewStyle;
@@ -23,6 +14,7 @@ interface Styles {
   scrollContainer: ViewStyle;
   card: ViewStyle;
   cardImage: ImageStyle;
+  textContainer: ViewStyle;
   cardTitle: TextStyle;
   cardSubtitle: TextStyle;
   backButton: ViewStyle;
@@ -30,21 +22,93 @@ interface Styles {
   paginationDot: ViewStyle;
   paginationDotActive: ViewStyle;
   title: TextStyle;
-  sidebarContainer: ViewStyle;
-  row: ViewStyle;
+  addButton: ViewStyle;
+  addButton3: ViewStyle;
+  addButton2: ImageStyle;
+  addButton4: ImageStyle;
+  content1: ViewStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
   containerGlobal: {
     flex: 1,
   },
+  addButton: {
+    position: 'absolute',
+    top: 15,
+    right: 50,
+    bottom: 30,
+    width: 65,
+    height: 65,
+    borderRadius: 30,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  addButton2: {
+      position: 'absolute',
+    top: 2,
+    right: 2,
+    bottom: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#4bec3cf6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  addButton3: {
+      position: 'absolute',
+    top: 1,
+    right: 200,
+    bottom: 30,
+    width: 95,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  addButton4: {
+      position: 'absolute',
+    top: 10,
+    right: 5,
+    bottom: 30,
+    width: 90,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#f0f7ef02',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
   container: {
-    height: 420,
-    marginVertical: 80,
+    height: '70%',
+    marginVertical: 'auto',
     overflow: 'hidden',
   },
   content: {
-    padding: 20,
+    padding: 10,
+    alignItems: 'center',
+    width: '100%',
+  },
+   content1: {
+    padding: 10,
     alignItems: 'center',
     width: '100%',
   },
@@ -52,20 +116,30 @@ const styles = StyleSheet.create<Styles>({
     alignItems: 'center',
   },
   card: {
-    height: 400,
-    borderRadius: 20,
-    justifyContent: 'center',
+    height: '100%',
+    width: 'auto',
+    borderRadius: 30,
+    justifyContent: 'flex-end', // Cambiado para alinear el texto al fondo
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#010101ff',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 15,
+    position: 'relative',
   },
   cardImage: {
-    width: 80,
-    height: 80,
-    marginBottom: 20,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+  },
+  textContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semitransparente para mejor legibilidad
+    padding: 15,
+    width: '100%',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   cardTitle: {
     fontSize: 22,
@@ -73,19 +147,25 @@ const styles = StyleSheet.create<Styles>({
     color: '#fff',
     marginBottom: 8,
     textAlign: 'center',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10,
   },
   cardSubtitle: {
     fontSize: 14,
     color: '#fff',
     textAlign: 'center',
     paddingHorizontal: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10,
   },
   backButton: {
     position: 'absolute',
+    marginTop: 5,
     left: 20,
     zIndex: 10,
     padding: 5,
-    marginTop: 10,
   },
   pagination: {
     flexDirection: 'row',
@@ -107,23 +187,10 @@ const styles = StyleSheet.create<Styles>({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'rgba(14, 14, 14, 0.99)', // color para contraste
-    marginBottom: 10,
-    marginTop: 5,
-    right: -10,
-  },
-  // Checkerboard sidebar
-  sidebarContainer: {
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: SQUARE_SIZE * NUM_COLS,
-    flexDirection: 'column',
-    zIndex: 0,
-  },
-  row: {
-    flexDirection: 'row',
+    color: 'white',
+    marginBottom: 8,
+    marginTop: 8,
+    right: -5,
   },
 });
 
